@@ -1,8 +1,9 @@
 ﻿using Order.Api.Enums;
+using SharedKernel.DDD;
 
 namespace Order.Api.Models
 {
-    public class DeliveryOrder // inherit from aggregate + id
+    public class DeliveryOrder : Aggregate<Guid>
     {
         public string SenderName { get; set; }
         public string SenderContact { get; set; }
@@ -12,7 +13,7 @@ namespace Order.Api.Models
         public string PickupAddress { get; set; }
         public string DeliveryAddress { get; set; }
 
-        public CargoDetails Cargo { get; set; }
+       // public CargoDetails Cargo { get; set; }
 
         public DeliveryStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }

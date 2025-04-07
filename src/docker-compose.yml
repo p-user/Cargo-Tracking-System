@@ -1,0 +1,6 @@
+services:
+    orderdb:
+        image: orderdb
+    
+volumes:
+    sqlserverOrderdata:

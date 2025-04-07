@@ -1,0 +1,15 @@
+services:
+    orderdb:
+        container_name: orderdb
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "<123456789>"
+        restart: always
+        ports:
+            - "1433:1433"   
+        volumes:
+            - sqlServer_Order:/var/opt/mssql
+volumes:
+  sqlServer_Order:
+    driver: local  
