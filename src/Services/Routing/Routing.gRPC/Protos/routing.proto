@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option csharp_namespace = "Routing.gRPC.Protos";
+
+package Routing;
+
+//services 
+
+service RoutingProtoService {
+ 
+  rpc GetRoute (RouteRequest) returns (RouteResponse);
+  rpc GetRouteWithWaypoints (RouteRequestWithWaypoints) returns (RouteResponse);
+  rpc CreateRoute(CreateRouteRequest) returns (RouteResponse);
+  rpc UpdateRoute(UpdateRouteRequest) returns (RouteResponse);
+  rpc DeleteRoute(DeleteRouteRequest) returns (DeleteRouteResponse);
+}
+
+//messages
+message RouteRequest {
+  string OrderId = 1;
+  
+}
+
+message RouteRequestWithWaypoints {
+  string OrderId = 1;
+  repeated Waypoint Waypoints = 2;
+}
+
+message CreateRouteRequest {
+  string OrderId = 1;
+  repeated Waypoint Waypoints = 2;
+}
+ message UpdateRouteRequest {
+  string OrderId = 1;
+  repeated Waypoint Waypoints = 2;
+}
+
+message DeleteRouteRequest {
+  string OrderId = 1;
+}
+
+message DeleteRouteResponse {
+  bool Success = 1;
+}
+
+message RouteResponse {
+  string OrderId = 1;
+  repeated Waypoint Waypoints = 2;
+}
+
+message Waypoint {
+ 
+  double Latitude = 1;
+  double Longitude = 2;
+  
+}
