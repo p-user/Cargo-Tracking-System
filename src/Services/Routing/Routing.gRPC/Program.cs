@@ -13,6 +13,7 @@ builder.Services.AddDbContext<RoutingDbContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapGrpcService<RoutingService>();
+//app.MapGrpcService<RoutingService>();
+//app.MapGrpcService<WaypointService>();
 app.EnsureSeedData();
 app.Run();

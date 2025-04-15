@@ -6,7 +6,7 @@
         public double WeightKg { get; private set; }
         public string Dimensions { get; private set; }
 
-        public static CargoDetails Create(string? description, double weightKg, string dimensions)
+        public CargoDetails (string? description, double weightKg, string dimensions)
         {
 
             if (weightKg <= 0)
@@ -15,12 +15,10 @@
             if (string.IsNullOrWhiteSpace(dimensions))
                 throw new ArgumentException("Dimensions are required.");
 
-            return new CargoDetails
-            {
-                Description = description,
-                WeightKg = weightKg,
-                Dimensions = dimensions
-            };
+            Description = description;
+            WeightKg = weightKg;
+            Dimensions = dimensions;
+           
         }
     }
 }

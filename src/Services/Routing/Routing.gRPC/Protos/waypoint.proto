@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+option csharp_namespace = "Routing.gRPC.Protos";
+
+package Routing;
+
+// Waypoint status enum
+enum WaypointStatus {
+  PENDING = 0;
+  EN_ROUTE = 1;
+  ARRIVED = 2;
+  SKIPPED = 3;
+  COMPLETED = 4;
+}
+
+// Waypoint message
+message Waypoint {
+  required string id = 1;
+  required string route_id = 2;
+  required string location_name = 3;
+  required double latitude = 4;
+  required double longitude = 5;
+  required int32 sequence = 6;
+  optional string estimated_arrival = 7;   
+  optional string estimated_departure = 8;
+  optional WaypointStatus status = 9;
+}
+
+// Requests and Responses
+
+// For getting all waypoints of a route
+message GetWaypointsByRouteRequest {
+  required string route_id = 1;
+}
+
+message GetWaypointsByRouteResponse {
+  repeated Waypoint waypoints = 1;
+}
+
+// For status updates
+message UpdateWaypointStatusRequest {
+  required string waypoint_id = 1;
+  required WaypointStatus new_status = 2;
+}
+
+message UpdateWaypointStatusResponse {
+  required Waypoint updated_waypoint = 1;
+}
+
+
+
+
+//  gRPC endpoints
+
+service WaypointProtoService {
+  rpc GetWaypointsByRoute(GetWaypointsByRouteRequest) returns (GetWaypointsByRouteResponse);
+  rpc UpdateWaypointStatus(UpdateWaypointStatusRequest) returns (null);
+  rpc UpdateEstimatedTimes(UpdateEstimatedTimesRequest) returns (null);
+}

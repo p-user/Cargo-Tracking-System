@@ -4,53 +4,74 @@ option csharp_namespace = "Routing.gRPC.Protos";
 
 package Routing;
 
-//services 
+import "Protos/waypoint.proto";
 
-service RoutingProtoService {
- 
-  rpc GetRoute (RouteRequest) returns (RouteResponse);
-  rpc GetRouteWithWaypoints (RouteRequestWithWaypoints) returns (RouteResponse);
-  rpc CreateRoute(CreateRouteRequest) returns (RouteResponse);
-  rpc UpdateRoute(UpdateRouteRequest) returns (RouteResponse);
-  rpc DeleteRoute(DeleteRouteRequest) returns (DeleteRouteResponse);
+// Route status enum
+enum RouteStatus {
+  PLANNED = 0;
+  IN_PROGRESS = 1;
+  DELAYED = 2;
+  COMPLETED = 3;
+  CANCELLED = 4;
 }
 
-//messages
+// Routing service
+service RoutingProtoService {
+  rpc GetRoute (RouteRequest) returns (RouteResponse);
+  rpc GetRouteWithWaypoints (RouteRequestWithWaypoints) returns (RouteResponse);
+  rpc CreateRoute (CreateRouteRequest) returns (RouteResponse);
+  rpc UpdateRoute (UpdateRouteRequest) returns (RouteResponse);
+  rpc DeleteRoute (DeleteRouteRequest) returns (DeleteRouteResponse);
+}
+
+// Messages
+
 message RouteRequest {
-  string OrderId = 1;
-  
+  required string route_id = 1;
 }
 
 message RouteRequestWithWaypoints {
-  string OrderId = 1;
-  repeated Waypoint Waypoints = 2;
+  required string order_id = 1;
+  repeated Waypoint waypoints = 2;
 }
 
 message CreateRouteRequest {
-  string OrderId = 1;
-  repeated Waypoint Waypoints = 2;
+  required string order_id = 1;
+  required string origin = 2;
+  required string destination = 3;
+  optional double distance_in_km = 4;
+  optional string estimated_time = 5; // format as ISO8601 duration or simple string like "02:30:00"
+  optional string estimated_delivery_date = 6; // ISO 8601 format
+  repeated Waypoint waypoints = 7;
 }
- message UpdateRouteRequest {
-  string OrderId = 1;
-  repeated Waypoint Waypoints = 2;
+
+message UpdateRouteRequest {
+  required string route_id = 1;
+  required string origin = 2;
+  required string destination = 3;
+  optional double distance_in_km = 4;
+  optional string estimated_time = 5;
+  optional string estimated_delivery_date = 6;
+  repeated Waypoint waypoints = 7;
+  required RouteStatus status = 8;
 }
 
 message DeleteRouteRequest {
-  string OrderId = 1;
+  required string route_id = 1;
 }
 
 message DeleteRouteResponse {
-  bool Success = 1;
+  required bool success = 1;
 }
 
 message RouteResponse {
-  string OrderId = 1;
-  repeated Waypoint Waypoints = 2;
-}
-
-message Waypoint {
- 
-  double Latitude = 1;
-  double Longitude = 2;
-  
+  required string route_id = 1;
+  required string order_id = 2;
+  required string origin = 3;
+  required string destination = 4;
+  optional double distance_in_km = 5;
+  optional string estimated_time = 6;
+  optional string estimated_delivery_date = 7;
+  required RouteStatus status = 8;
+  repeated Waypoint waypoints = 9;
 }

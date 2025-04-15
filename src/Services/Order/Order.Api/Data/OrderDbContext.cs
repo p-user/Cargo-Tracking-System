@@ -1,4 +1,6 @@
-﻿namespace Order.Api.Data
+﻿using System.Reflection;
+
+namespace Order.Api.Data
 {
     public class OrderDbContext : DbContext
     {
@@ -9,6 +11,9 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+
 
         }
     }

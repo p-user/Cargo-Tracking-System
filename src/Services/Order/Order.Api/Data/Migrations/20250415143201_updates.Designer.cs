@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Order.Api.Data;
 
@@ -11,9 +12,11 @@ using Order.Api.Data;
 namespace Order.Api.Data.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class OrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250415143201_updates")]
+    partial class updates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +78,7 @@ namespace Order.Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryOrders", (string)null);
+                    b.ToTable("DeliveryOrders");
                 });
 
             modelBuilder.Entity("Order.Api.Models.DeliveryOrder", b =>
@@ -100,7 +103,7 @@ namespace Order.Api.Data.Migrations
 
                             b1.HasKey("DeliveryOrderId");
 
-                            b1.ToTable("DeliveryOrders", (string)null);
+                            b1.ToTable("DeliveryOrders");
 
                             b1.WithOwner()
                                 .HasForeignKey("DeliveryOrderId");

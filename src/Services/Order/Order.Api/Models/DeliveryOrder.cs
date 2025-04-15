@@ -20,7 +20,7 @@ namespace Order.Api.Models
 
         public Guid? TrackingId { get; private set; }
 
-        public DeliveryOrder()
+        private DeliveryOrder()
         {
 
         }
