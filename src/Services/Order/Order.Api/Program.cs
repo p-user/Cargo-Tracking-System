@@ -5,6 +5,8 @@ var assembly = typeof(Program).Assembly;
 builder.Services.AddDbContext<OrderDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAutoMapper(assembly);
+
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
@@ -16,7 +18,10 @@ var app = builder.Build();
 
 app.ApplyMigrations<OrderDbContext>();
 
+
 app.MapGet("/", () => "Hello World!"); //test
+
+
 
 
 
