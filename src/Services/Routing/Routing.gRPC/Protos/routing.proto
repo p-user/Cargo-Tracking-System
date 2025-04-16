@@ -7,13 +7,15 @@ package Routing;
 import "Protos/waypoint.proto";
 
 // Route status enum
+
 enum RouteStatus {
-  PLANNED = 0;
-  IN_PROGRESS = 1;
-  DELAYED = 2;
-  COMPLETED = 3;
-  CANCELLED = 4;
+  ROUTE_STATUS_PLANNED = 0;
+  ROUTE_STATUS_IN_PROGRESS = 1;
+  ROUTE_STATUS_DELAYED = 2;
+  ROUTE_STATUS_COMPLETED = 3;
+  ROUTE_STATUS_CANCELLED = 4;
 }
+
 
 // Routing service
 service RoutingProtoService {
@@ -27,51 +29,51 @@ service RoutingProtoService {
 // Messages
 
 message RouteRequest {
-  required string route_id = 1;
+   string route_id = 1;
 }
 
 message RouteRequestWithWaypoints {
-  required string order_id = 1;
+   string order_id = 1;
   repeated Waypoint waypoints = 2;
 }
 
 message CreateRouteRequest {
-  required string order_id = 1;
-  required string origin = 2;
-  required string destination = 3;
+   string order_id = 1;
+   string origin = 2;
+   string destination = 3;
   optional double distance_in_km = 4;
-  optional string estimated_time = 5; // format as ISO8601 duration or simple string like "02:30:00"
-  optional string estimated_delivery_date = 6; // ISO 8601 format
+  optional string estimated_time = 5; 
+  optional string estimated_delivery_date = 6; 
   repeated Waypoint waypoints = 7;
 }
 
 message UpdateRouteRequest {
-  required string route_id = 1;
-  required string origin = 2;
-  required string destination = 3;
+   string route_id = 1;
+   string origin = 2;
+   string destination = 3;
   optional double distance_in_km = 4;
   optional string estimated_time = 5;
   optional string estimated_delivery_date = 6;
   repeated Waypoint waypoints = 7;
-  required RouteStatus status = 8;
+   RouteStatus status = 8;
 }
 
 message DeleteRouteRequest {
-  required string route_id = 1;
+   string route_id = 1;
 }
 
 message DeleteRouteResponse {
-  required bool success = 1;
+   bool success = 1;
 }
 
 message RouteResponse {
-  required string route_id = 1;
-  required string order_id = 2;
-  required string origin = 3;
-  required string destination = 4;
+   string route_id = 1;
+   string order_id = 2;
+   string origin = 3;
+   string destination = 4;
   optional double distance_in_km = 5;
   optional string estimated_time = 6;
   optional string estimated_delivery_date = 7;
-  required RouteStatus status = 8;
+   RouteStatus status = 8;
   repeated Waypoint waypoints = 9;
 }

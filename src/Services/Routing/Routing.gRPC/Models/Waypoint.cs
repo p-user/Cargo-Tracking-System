@@ -1,14 +1,13 @@
-﻿using Grpc.Core;
-using Routing.gRPC.Enums;
+﻿using Routing.gRPC.Enums;
 using SharedKernel.DDD;
 
 namespace Routing.gRPC.Models
 {
-    public class Waypoint: Entity<Guid>
+    public class Waypoint : Entity<Guid>
     {
         public Guid RouteId { get; private set; }
         public Route Route { get; set; } = default!;
-        public string LocationName { get; private set; }
+        public string? LocationName { get; private set; }
         public double Latitude { get; private set; }
         public double Longitude { get; private set; }
         public int Sequence { get; private set; } // Order in the route
@@ -18,7 +17,7 @@ namespace Routing.gRPC.Models
 
         private Waypoint() { }
 
-        private Waypoint(Guid routeId,string locationName, double latitude, double longitude, int sequence)
+        private Waypoint(Guid routeId, string locationName, double latitude, double longitude, int sequence)
         {
             Id = Guid.NewGuid();
             RouteId = routeId;
@@ -29,10 +28,12 @@ namespace Routing.gRPC.Models
             Status = WaypointStatus.Pending;
         }
 
-        public static Waypoint Create(Guid routeId, string locationName,double latitude,double longitude,int sequence)
+        public static Waypoint Create(Guid routeId, string locationName, double latitude, double longitude, int sequence)
         {
             if (string.IsNullOrWhiteSpace(locationName))
+            {
                 throw new ArgumentException("Location name cannot be empty.");
+            }
 
             return new Waypoint(routeId, locationName, latitude, longitude, sequence);
         }
@@ -41,7 +42,10 @@ namespace Routing.gRPC.Models
         public void MarkAsEnRoute()
         {
             if (Status != WaypointStatus.Pending)
+            {
+
                 throw new InvalidOperationException($"Cannot set EnRoute. Current status: {Status}");
+            }
 
             Status = WaypointStatus.EnRoute;
         }
@@ -49,7 +53,10 @@ namespace Routing.gRPC.Models
         public void MarkAsArrived()
         {
             if (Status != WaypointStatus.EnRoute)
+            {
                 throw new InvalidOperationException("Waypoint must be EnRoute before arriving.");
+
+            }
 
             Status = WaypointStatus.Arrived;
         }
@@ -57,7 +64,10 @@ namespace Routing.gRPC.Models
         public void MarkAsCompleted()
         {
             if (Status != WaypointStatus.Arrived)
+            {
+
                 throw new InvalidOperationException("Waypoint must be Arrived before being completed.");
+            }
 
             Status = WaypointStatus.Completed;
         }
@@ -65,7 +75,10 @@ namespace Routing.gRPC.Models
         public void Skip()
         {
             if (Status == WaypointStatus.Completed)
+            {
+
                 throw new InvalidOperationException("Cannot skip a completed waypoint.");
+            }
 
             Status = WaypointStatus.Skipped;
         }

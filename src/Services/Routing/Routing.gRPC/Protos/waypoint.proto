@@ -6,21 +6,21 @@ package Routing;
 
 // Waypoint status enum
 enum WaypointStatus {
-  PENDING = 0;
-  EN_ROUTE = 1;
-  ARRIVED = 2;
-  SKIPPED = 3;
-  COMPLETED = 4;
+  WAYPOINT_STATUS_PENDING = 0;
+  WAYPOINT_STATUS_EN_ROUTE = 1;
+  WAYPOINT_STATUS_ARRIVED = 2;
+  WAYPOINT_STATUS_SKIPPED = 3;
+  WAYPOINT_STATUS_COMPLETED = 4;
 }
 
 // Waypoint message
 message Waypoint {
-  required string id = 1;
-  required string route_id = 2;
-  required string location_name = 3;
-  required double latitude = 4;
-  required double longitude = 5;
-  required int32 sequence = 6;
+   string id = 1;
+   string route_id = 2;
+   string location_name = 3;
+   double latitude = 4;
+   double longitude = 5;
+   int32 sequence = 6;
   optional string estimated_arrival = 7;   
   optional string estimated_departure = 8;
   optional WaypointStatus status = 9;
@@ -30,7 +30,7 @@ message Waypoint {
 
 // For getting all waypoints of a route
 message GetWaypointsByRouteRequest {
-  required string route_id = 1;
+   string route_id = 1;
 }
 
 message GetWaypointsByRouteResponse {
@@ -39,21 +39,18 @@ message GetWaypointsByRouteResponse {
 
 // For status updates
 message UpdateWaypointStatusRequest {
-  required string waypoint_id = 1;
-  required WaypointStatus new_status = 2;
+   string waypoint_id = 1;
+   WaypointStatus new_status = 2;
 }
 
 message UpdateWaypointStatusResponse {
-  required Waypoint updated_waypoint = 1;
+   Waypoint updated_waypoint = 1;
 }
-
-
 
 
 //  gRPC endpoints
 
 service WaypointProtoService {
   rpc GetWaypointsByRoute(GetWaypointsByRouteRequest) returns (GetWaypointsByRouteResponse);
-  rpc UpdateWaypointStatus(UpdateWaypointStatusRequest) returns (null);
-  rpc UpdateEstimatedTimes(UpdateEstimatedTimesRequest) returns (null);
+  rpc UpdateWaypointStatus(UpdateWaypointStatusRequest) returns (UpdateWaypointStatusRequest);
 }
