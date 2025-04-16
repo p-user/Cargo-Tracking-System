@@ -37,4 +37,5 @@ The **Cargo Tracking System** is a distributed microservices-based application d
 - 🗂️ **Vertical Slice Architecture** adopted in all services except Routing for modular feature-based design.
 - 🌐 **gRPC** used for high-performance communication in the Routing Service.
 - 📍 **Google Maps API** integrated for routing and distance estimation.
+- 📬 **RabbitMQ + MassTransit**  for asynchronous messaging.
 - 📬 **Email Integration** in Notification Service for user updates.
