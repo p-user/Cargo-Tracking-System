@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Order.Api.Dtos;
-using SharedKernel.CQRS;
-
+﻿
 namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 {
 
-    public record CreateDeliveryOrderCommand(DeliveryOrderDto dto) : ICommand<CreateDeliveryOrderCommandResponse>;
+    public record CreateDeliveryOrderCommand(CreateDeliveryOrderDto dto) : ICommand<CreateDeliveryOrderCommandResponse>;
 
     public record CreateDeliveryOrderCommandResponse(Guid Id);
 

@@ -1,5 +1,12 @@
-﻿global using Microsoft.EntityFrameworkCore;
+﻿global using AutoMapper;
+global using Carter;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;
+global using Order.Api.Constants;
 global using Order.Api.Data;
+global using Order.Api.Dtos;
 global using Order.Api.Models;
 global using SharedKernel.Behaviors;
+global using SharedKernel.CQRS;
+global using SharedKernel.Exeptions;
 global using SharedKernel.Extensions;

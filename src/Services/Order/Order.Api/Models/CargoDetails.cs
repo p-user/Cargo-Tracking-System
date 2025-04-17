@@ -4,21 +4,34 @@
     {
         public string? Description { get; private set; }
         public double WeightKg { get; private set; }
-        public string Dimensions { get; private set; }
+        public decimal LengthCm { get; private set; }
+        public decimal WidthCm { get; private set; }
+        public decimal HeightCm { get; private set; }
 
-        public CargoDetails (string? description, double weightKg, string dimensions)
+        public CargoDetails(string? description, double weightKg, decimal lengthCm, decimal widthCm, decimal heightCm)
         {
 
             if (weightKg <= 0)
                 throw new ArgumentOutOfRangeException(nameof(weightKg), "Weight must be positive.");
 
-            if (string.IsNullOrWhiteSpace(dimensions))
-                throw new ArgumentException("Dimensions are required.");
+            if (lengthCm <= 0)
+                throw new ArgumentOutOfRangeException(nameof(lengthCm), "Length must be positive.");
+
+            if (widthCm <= 0)
+                throw new ArgumentOutOfRangeException(nameof(widthCm), "Width must be positive.");
+
+
+            if (heightCm <= 0)
+                throw new ArgumentOutOfRangeException(nameof(heightCm), "Height must be positive.");
+
 
             Description = description;
             WeightKg = weightKg;
-            Dimensions = dimensions;
-           
+            LengthCm = lengthCm;
+            WidthCm = widthCm;
+            HeightCm = heightCm;
+
+
         }
     }
 }

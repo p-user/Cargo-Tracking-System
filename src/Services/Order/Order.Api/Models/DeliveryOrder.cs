@@ -68,5 +68,27 @@ namespace Order.Api.Models
         //ToDo: set tracking id from external service
 
 
+
+
+        public void SetStatus(DeliveryStatus status)
+        {
+            if (status == DeliveryStatus.Cancelled && Status == DeliveryStatus.Delivered)
+            {
+                throw new InvalidOperationException("Cannot cancel a delivered order.");
+            }
+            if (status == DeliveryStatus.Dispatched && Status != DeliveryStatus.Created)
+            {
+                throw new InvalidOperationException("Order must be created to be dispatched.");
+            }
+            if (status == DeliveryStatus.Delivered && Status != DeliveryStatus.InTransit)
+            {
+                throw new InvalidOperationException("Order must be in transit to be delivered.");
+            }
+            if (status == DeliveryStatus.InTransit && Status != DeliveryStatus.PickedUp)
+            {
+                throw new InvalidOperationException("Order must be picked up to be in transit.");
+            }
+            Status = status;
+        }
     }
 }

@@ -20,6 +20,12 @@ namespace Order.Api.Dtos
         public Guid? TrackingId { get; set; }
     }
 
+
+    public record CreateDeliveryOrderDto : DeliveryOrderDto
+    {
+
+    }
+
     public record ViewDeliveryOrderDto : DeliveryOrderDto
     {
         public Guid Id { get; init; }

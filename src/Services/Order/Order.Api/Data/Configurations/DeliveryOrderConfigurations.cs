@@ -10,7 +10,7 @@ namespace Order.Api.Data.Configurations
             {
                 cargo.Property(c => c.Description).HasColumnName("CargoDescription");
                 cargo.Property(c => c.WeightKg).HasColumnName("CargoWeightKg");
-                cargo.Property(c => c.Dimensions).HasColumnName("CargoDimensions");
+
             });
         }
     }
