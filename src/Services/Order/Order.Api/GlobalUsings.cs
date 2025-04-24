@@ -10,3 +10,4 @@ global using SharedKernel.Behaviors;
 global using SharedKernel.CQRS;
 global using SharedKernel.Exeptions;
 global using SharedKernel.Extensions;
+global using SharedKernel.DDD;

@@ -15,6 +15,20 @@
             CreateMap<CargoDetails, CargoDetailsDto>()
                 .ReverseMap();
 
+
+            CreateMap<Customer, CustomerDto>()
+                .ReverseMap();
+
+
+            CreateMap<Customer, CreateCustomerDto>()
+               .ReverseMap();
+
+            CreateMap<Customer, ViewCustomerDto>()
+               .ReverseMap();
+
+            CreateMap<Address, AddressDto>()
+                .ReverseMap();
+
         }
     }
 }

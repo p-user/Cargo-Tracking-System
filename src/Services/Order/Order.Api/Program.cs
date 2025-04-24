@@ -1,3 +1,5 @@
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var assembly = typeof(Program).Assembly;
@@ -14,15 +16,26 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+builder.Services.AddCarter();
+
 var app = builder.Build();
 
 app.ApplyMigrations<OrderDbContext>();
 
 
-app.MapGet("/", () => "Hello World!"); //test
-
-
-
+app.MapCarter();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+                .WithTitle("Cargo Tracking System")
+                .WithTheme(ScalarTheme.Purple)
+                .WithDownloadButton(true)
+                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+}
 
 
 app.Run();

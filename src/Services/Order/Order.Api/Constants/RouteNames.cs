@@ -11,5 +11,7 @@
         public const string DeleteDeliveryOrder = "DeleteDeliveryOrder";
         public const string GetTrackingDetails = "GetTrackingDetails";
         public const string UpdateTrackingDetails = "UpdateTrackingDetails";
+        public const string CreateCustomer = "CreateCustomer";
+        public const string GetCustomerById = "GetCustomerById";
     }
 }

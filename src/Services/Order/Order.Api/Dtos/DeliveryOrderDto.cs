@@ -4,8 +4,7 @@ namespace Order.Api.Dtos
 {
     public record DeliveryOrderDto
     {
-        public string SenderName { get; set; }
-        public string SenderContact { get; set; }
+       
         public string ReceiverName { get; set; }
         public string ReceiverContact { get; set; }
 
@@ -23,6 +22,7 @@ namespace Order.Api.Dtos
 
     public record CreateDeliveryOrderDto : DeliveryOrderDto
     {
+        public CustomerDto Customer { get; set; } 
 
     }
 
@@ -33,6 +33,7 @@ namespace Order.Api.Dtos
         public DateTime? LastModified { get; init; }
         public string? CreatedBy { get; init; }
         public string? LastModifiedBy { get; init; }
+        public ViewCustomerDto ViewCustomer { get; init; }
 
 
     }

@@ -7,7 +7,9 @@ namespace Order.Api.Data
         public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
         {
         }
-        public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
+        public virtual DbSet<DeliveryOrder> DeliveryOrders { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,4 +1,6 @@
 ﻿
+using Order.Api.Features.Customer.GetCustomerByEmail;
+
 namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 {
 
@@ -6,22 +8,29 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 
     public record CreateDeliveryOrderCommandResponse(Guid Id);
 
-    public class CreateDeliveryOrderCommandHandler(OrderDbContext context, IMapper mapper) : ICommandHandler<CreateDeliveryOrderCommand, CreateDeliveryOrderCommandResponse>
+    public class CreateDeliveryOrderCommandHandler(OrderDbContext _context, IMapper _mapper, ISender _sender) : ICommandHandler<CreateDeliveryOrderCommand, CreateDeliveryOrderCommandResponse>
     {
         public async Task<CreateDeliveryOrderCommandResponse> Handle(CreateDeliveryOrderCommand request, CancellationToken cancellationToken)
         {
-            var cargo = mapper.Map<CargoDetails>(request.dto.Cargo);
-            var deliveryOrder = CreateDeleveryOrder(request.dto, cargo);
+            //verify customer 
+            var customerVM = await _sender.Send(new GetCustomerByEmailCommand(request.dto.Customer));
+            var customer = _mapper.Map<Models.Customer>(customerVM);
 
-            await context.DeliveryOrders.AddAsync(deliveryOrder, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
+            var cargo = _mapper.Map<CargoDetails>(request.dto.Cargo);
+
+            var deliveryOrder = CreateDeliveryOrder(request.dto, cargo, customer);
+
+            await _context.DeliveryOrders.AddAsync(deliveryOrder, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new CreateDeliveryOrderCommandResponse(deliveryOrder.Id);
         }
 
-        private Models.DeliveryOrder CreateDeleveryOrder(DeliveryOrderDto dto, CargoDetails cargo)
+
+      
+        private Models.DeliveryOrder CreateDeliveryOrder(DeliveryOrderDto dto, CargoDetails cargo, Models.Customer customer)
         {
-            return Models.DeliveryOrder.Create(dto.SenderName, dto.SenderContact, dto.ReceiverName, dto.ReceiverContact, dto.PickupAddress, dto.DeliveryAddress, cargo);
+            return Models.DeliveryOrder.Create(customer, dto.ReceiverName, dto.ReceiverContact, dto.PickupAddress, dto.DeliveryAddress, cargo);
 
         }
     }

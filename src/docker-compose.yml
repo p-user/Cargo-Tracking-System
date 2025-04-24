@@ -1,6 +1,14 @@
 services:
+    yarpapigateway:
+        image: ${DOCKER_REGISTRY-}yarpapigateway
+        build:
+          context: .
+          dockerfile: Gateways/YarpApiGateway/Dockerfile
     orderdb:
-        image: orderdb
-    
-volumes:
-    sqlserverOrderdata:
+        image: mcr.microsoft.com/mssql/server
+   
+    order.api:
+        image: ${DOCKER_REGISTRY-}orderapi
+        build:
+            context: .
+            dockerfile: Services/Order/Order.Api/Dockerfile

@@ -5,8 +5,8 @@ namespace Order.Api.Models
 {
     public class DeliveryOrder : Aggregate<Guid>
     {
-        public string SenderName { get; private set; }
-        public string SenderContact { get; private set; }
+        public Guid CustomerId { get; private set; }
+        public Customer Customer { get; private set; }
         public string ReceiverName { get; private set; }
         public string ReceiverContact { get; private set; }
 
@@ -37,8 +37,7 @@ namespace Order.Api.Models
 
 
         public static DeliveryOrder Create(
-         string senderName,
-         string senderContact,
+         Customer customer,
          string receiverName,
          string receiverContact,
          string pickupAddress,
@@ -46,14 +45,13 @@ namespace Order.Api.Models
          CargoDetails cargo)
         {
 
-            if (string.IsNullOrWhiteSpace(senderName)) throw new ArgumentException("Sender name is required.");
+           
             if (cargo == null) throw new ArgumentNullException(nameof(cargo));
 
             return new DeliveryOrder
             {
                 Id = Guid.NewGuid(),
-                SenderName = senderName,
-                SenderContact = senderContact,
+                CustomerId = customer.Id,
                 ReceiverName = receiverName,
                 ReceiverContact = receiverContact,
                 PickupAddress = pickupAddress,
