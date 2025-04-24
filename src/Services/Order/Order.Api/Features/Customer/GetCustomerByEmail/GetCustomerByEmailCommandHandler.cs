@@ -7,7 +7,7 @@
         public async  Task<GetCustomerByEmailCommandResponse> Handle(GetCustomerByEmailCommand request, CancellationToken cancellationToken)
         {
             var customer = await _context.Customers.Where(s=>s.Email==request.customerDto.Email).FirstOrDefaultAsync(cancellationToken);
-            if (customer!=null) { throw new NotFoundException(nameof(Customer), request.customerDto.Email);  }
+            if (customer is null) { throw new NotFoundException(nameof(Customer), request.customerDto.Email);  }
              var mapped = _mapper.Map<ViewCustomerDto>(customer);
             return new GetCustomerByEmailCommandResponse(mapped);
 

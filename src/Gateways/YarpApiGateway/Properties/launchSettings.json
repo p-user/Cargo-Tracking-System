@@ -10,6 +10,7 @@
       "applicationUrl": "http://localhost:6004"
     },
     "https": {
+      "launchUrl": "scalar/v1",
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

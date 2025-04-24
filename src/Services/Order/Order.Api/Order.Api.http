@@ -1,0 +1,71 @@
+﻿@Order.Api_HostAddress = https://localhost:5050
+
+  //customerDto
+POST {{Order.Api_HostAddress}}/order/customers
+Content-Type: application/json
+
+{
+  
+    "fullName": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1987654321",
+    "address": {
+      "street": " Gjuhadol",
+      "city": "Shkoder",
+      "zipCode": "12345",
+      "country": "Albania"
+    }
+}
+
+####
+
+ //CreateDeliveryOrderDto
+
+POST {{Order.Api_HostAddress}}/order/delivery-orders
+Content-Type: application/json
+
+{
+
+  "receiverName": "test",
+  "receiverContact": "+1234567890",
+  "pickupAddress": "Tirane, rruga e kavajes",
+  "deliveryAddress": "Tirane, rruga e kavajes",
+  "cargo": {
+    "description": "Electronics",
+    "weightKg": 25.5,
+    "WidthCm": 12,
+    "heightCm": 12,
+    "lengthCm": 12.3
+  },
+  "status": 0,
+  "customer": {
+    "fullName": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1987654321",
+    "address": {
+      "street": " Gjuhadol",
+      "city": "Shkoder",
+      "zipCode": "12345",
+      "country": "Albania"
+    }
+  }
+}
+
+###
+
+GET {{Order.Api_HostAddress}}/order/delivery-orders/892e090a-a907-40cc-b71d-ff44c8c0878a
+
+###
+
+PUT {{Order.Api_HostAddress}}/order/delivery-orders/892e090a-a907-40cc-b71d-ff44c8c0878a/status
+Content-Type: application/json
+
+{
+  "status": 1
+}
+
+###
+
+GET {{Order.Api_HostAddress}}/order/customers/55253a9e-e900-4bae-33e4-08dd83662fd2
+
+###

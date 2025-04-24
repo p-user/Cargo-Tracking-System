@@ -15,9 +15,9 @@ namespace Order.Api.Features.DeliveryOrder.UpdateDeliveryStatus
                 .WithTags(TagNames.DeliveryOrders);
         }
 
-        private async Task<IResult> UpdateDeliveryStatus([FromRoute] Guid id, [FromBody] DeliveryStatus status, ISender sender)
+        private async Task<IResult> UpdateDeliveryStatus([FromRoute] Guid id, [FromBody] UpdateDeliveryStatusDto statusDto, ISender sender)
         {
-            var command = new UpdateDeliveryStatusCommand(id, status);
+            var command = new UpdateDeliveryStatusCommand(id, statusDto.status);
             var response = await sender.Send(command);
             return Results.Ok(response);
         }

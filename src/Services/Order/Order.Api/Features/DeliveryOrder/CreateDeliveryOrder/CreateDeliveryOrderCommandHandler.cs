@@ -14,7 +14,7 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
         {
             //verify customer 
             var customerVM = await _sender.Send(new GetCustomerByEmailCommand(request.dto.Customer));
-            var customer = _mapper.Map<Models.Customer>(customerVM);
+            var customer = _mapper.Map<Models.Customer>(customerVM.viewCustomerDto);
 
             var cargo = _mapper.Map<CargoDetails>(request.dto.Cargo);
 

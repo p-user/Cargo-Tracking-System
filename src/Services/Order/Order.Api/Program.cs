@@ -16,6 +16,7 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCarter();
 
 var app = builder.Build();
@@ -24,18 +25,18 @@ app.ApplyMigrations<OrderDbContext>();
 
 
 app.MapCarter();
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options
-                .WithTitle("Cargo Tracking System")
-                .WithTheme(ScalarTheme.Purple)
-                .WithDownloadButton(true)
-                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
-    });
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.MapOpenApi();
+//    app.MapScalarApiReference(options =>
+//    {
+//        options
+//                .WithTitle("Cargo Tracking System")
+//                .WithTheme(ScalarTheme.Purple)
+//                .WithDownloadButton(true)
+//                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+//    });
+//}
 
 
 app.Run();

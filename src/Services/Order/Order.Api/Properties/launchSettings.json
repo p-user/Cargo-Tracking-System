@@ -10,8 +10,9 @@
       "applicationUrl": "http://localhost:5000"
     },
     "https": {
+      "launchUrl": "scalar/v1",
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
