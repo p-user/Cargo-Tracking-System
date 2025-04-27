@@ -10,14 +10,13 @@
       "applicationUrl": "http://localhost:6004"
     },
     "https": {
-      "launchUrl": "scalar/v1",
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:6054;http://localhost:5004"
+      "applicationUrl": "https://localhost:6054;http://localhost:6004"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",

@@ -8,8 +8,8 @@ It integrates with Google Maps to determine optimal paths between pickup and dro
 ## 🚀 Why Routing Service 
 
 
-- Using this service, we aim to  receive a clear route with waypoints, so we get to know where to pick up and drop off cargo.
-- Also, we track the estimated delivery time based on the planned route.
+- Using this service, we aim to  receive a clear route without waypoints, so we get to know where to pick up and drop off cargo.
+- We track the estimated delivery time based on the planned route.
 
 ---
 

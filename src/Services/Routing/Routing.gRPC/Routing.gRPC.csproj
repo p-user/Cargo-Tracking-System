@@ -9,10 +9,20 @@
     <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ProtoServices\RoutingService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Protos\routing.proto" />
+  </ItemGroup>
+
   
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.70.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
     <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,15 +33,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
+ 
   </ItemGroup>
 
-  <ItemGroup>
+   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Protobuf Include="Protos\routing.proto" GrpcServices="Server" />
-	  <Protobuf Include="Protos\waypoint.proto" GrpcServices="None" ProtoRoot="Protos\" />
 
 	 
   </ItemGroup>

@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Routing.gRPC.Data;
-using Routing.gRPC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +7,11 @@ builder.Services.AddGrpc();
 builder.Services.AddDbContext<RoutingDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpClient<GoogleMapsService>();
+builder.Services.AddSingleton<GoogleMapsService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//app.MapGrpcService<RoutingService>();
-//app.MapGrpcService<WaypointService>();
+app.MapGrpcService<RoutingService>();
 app.EnsureSeedData();
 app.Run();

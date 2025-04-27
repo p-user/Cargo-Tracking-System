@@ -1,6 +1,4 @@
-﻿
-
-namespace SharedKernel.DDD
+﻿namespace SharedKernel.DDD
 {
     public abstract class Entity<T> : IEntity<T>
     {

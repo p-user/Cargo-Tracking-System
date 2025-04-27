@@ -12,3 +12,10 @@ services:
         build:
             context: .
             dockerfile: Services/Order/Order.Api/Dockerfile
+
+    routing.grpc:
+        image: ${DOCKER_REGISTRY-}routinggrpc
+        build:
+           context: .
+           dockerfile: Services/Routing/Routing.gRPC/Dockerfile
+

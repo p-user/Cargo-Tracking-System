@@ -1,11 +1,17 @@
-﻿using Grpc.Core;
-using Routing.gRPC.Data;
-using Routing.gRPC.Protos;
-
-namespace Routing.gRPC.Services
+﻿namespace Routing.gRPC.Services
 {
-    public class RoutingService(ILogger<RoutingService> _logger, RoutingDbContext _context) : RoutingProtoService.RoutingProtoServiceBase
+    public class RoutingService : RoutingProtoService.RoutingProtoServiceBase
     {
+        private readonly ILogger<RoutingService> _logger;
+        private readonly RoutingDbContext _context;
+        private readonly GoogleMapsService _googleMapsService;
+
+        public RoutingService(ILogger<RoutingService> logger, RoutingDbContext context, GoogleMapsService googleMapsService)
+        {
+            _logger = logger;
+            _context = context;
+            _googleMapsService=googleMapsService;
+        }
         public override async Task<RouteResponse> GetRoute(RouteRequest request, ServerCallContext context)
         {
             var id = new Guid(request.RouteId);
@@ -15,16 +21,17 @@ namespace Routing.gRPC.Services
 
         public override async Task<RouteResponse> CreateRoute(CreateRouteRequest request, ServerCallContext context)
         {
+
+            var (distanceInKm, estimatedTime) = await _googleMapsService.GetRouteInfoAsync(request.Origin, request.Destination, CancellationToken.None);
+
+
             var route = Models.Route.Create(
                 request.OrderId,
                 request.Origin,
                 request.Destination,
-                request.DistanceInKm,
-                TimeSpan.Parse(request.EstimatedTime),
-                DateTime.Parse(request.EstimatedDeliveryDate)
+                distanceInKm,
+                estimatedTime
             );
-
-            //add waypoints
 
             await _context.Routes.AddAsync(route);
             await _context.SaveChangesAsync();
@@ -46,20 +53,9 @@ namespace Routing.gRPC.Services
                 Status = (RouteStatus)route.Status
             };
 
-            response.Waypoints.AddRange(route.Waypoints.Select(w => new Waypoint
-            {
-                Id = w.Id.ToString(),
-                RouteId = route.Id.ToString(),
-                LocationName = w.LocationName,
-                Latitude = w.Latitude,
-                Longitude = w.Longitude,
-                Sequence = w.Sequence,
-                Status = (WaypointStatus)w.Status
-            }));
 
             return response;
         }
 
     }
-
 }
