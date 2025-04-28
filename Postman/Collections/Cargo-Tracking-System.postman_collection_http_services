@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "5184f1e6-e12d-4180-979f-5ca5428dd44b",
+		"name": "Cargo-Tracking-System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23857025"
+	},
+	"item": [
+		{
+			"name": "Order Service",
+			"item": [
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "CreateCustomer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \r\n    \"fullName\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"+1987654321\",\r\n    \"address\": {\r\n      \"street\": \" Gjuhadol\",\r\n      \"city\": \"Shkoder\",\r\n      \"zipCode\": \"12345\",\r\n      \"country\": \"Albania\"\r\n    }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5050/order/customers",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"order",
+										"customers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delivery Order",
+					"item": [
+						{
+							"name": "CreateDeliveryOrder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n  \"receiverName\": \"test\",\r\n  \"receiverContact\": \"+1234567890\",\r\n  \"pickupAddress\": \"Tirane, rruga e kavajes\",\r\n  \"deliveryAddress\": \"Tirane, rruga e kavajes\",\r\n  \"cargo\": {\r\n    \"description\": \"Electronics\",\r\n    \"weightKg\": 25.5,\r\n    \"WidthCm\": 12,\r\n    \"heightCm\": 12,\r\n    \"lengthCm\": 12.3\r\n  },\r\n  \"status\": 0,\r\n  \"customer\": {\r\n    \"fullName\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"+1987654321\",\r\n    \"address\": {\r\n      \"street\": \" Gjuhadol\",\r\n      \"city\": \"Shkoder\",\r\n      \"zipCode\": \"12345\",\r\n      \"country\": \"Albania\"\r\n    }\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5050/order/delivery-orders",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"order",
+										"delivery-orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetDeliveryOrder",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:5050/order/delivery-orders/?id=892e090a-a907-40cc-b71d-ff44c8c0878a",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"order",
+										"delivery-orders",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "892e090a-a907-40cc-b71d-ff44c8c0878a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:5050/order/delivery-orders/{{id}}/status",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5050",
+									"path": [
+										"order",
+										"delivery-orders",
+										"{{id}}",
+										"status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tracking Service",
+			"item": []
+		},
+		{
+			"name": "Notification Service",
+			"item": []
+		},
+		{
+			"name": "YarpGateway",
+			"item": [
+				{
+					"name": "Order Service",
+					"item": [
+						{
+							"name": "Customer",
+							"item": [
+								{
+									"name": "CreateCustomer",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \r\n    \"fullName\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"+1987654321\",\r\n    \"address\": {\r\n      \"street\": \" Gjuhadol\",\r\n      \"city\": \"Shkoder\",\r\n      \"zipCode\": \"12345\",\r\n      \"country\": \"Albania\"\r\n    }\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5050/order/customers",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5050",
+											"path": [
+												"order",
+												"customers"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delivery Order",
+							"item": [
+								{
+									"name": "CreateDeliveryOrder",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\r\n  \"receiverName\": \"test\",\r\n  \"receiverContact\": \"+1234567890\",\r\n  \"pickupAddress\": \"Tirane, rruga e kavajes\",\r\n  \"deliveryAddress\": \"Tirane, rruga e kavajes\",\r\n  \"cargo\": {\r\n    \"description\": \"Electronics\",\r\n    \"weightKg\": 25.5,\r\n    \"WidthCm\": 12,\r\n    \"heightCm\": 12,\r\n    \"lengthCm\": 12.3\r\n  },\r\n  \"status\": 0,\r\n  \"customer\": {\r\n    \"fullName\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"+1987654321\",\r\n    \"address\": {\r\n      \"street\": \" Gjuhadol\",\r\n      \"city\": \"Shkoder\",\r\n      \"zipCode\": \"12345\",\r\n      \"country\": \"Albania\"\r\n    }\r\n  }\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5050/order/delivery-orders",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5050",
+											"path": [
+												"order",
+												"delivery-orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetDeliveryOrder",
+									"protocolProfileBehavior": {
+										"protocolVersion": "http1"
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{yarpgateway_https}}order/delivery-orders/892e090a-a907-40cc-b71d-ff44c8c0878a",
+											"host": [
+												"{{yarpgateway_https}}order"
+											],
+											"path": [
+												"delivery-orders",
+												"892e090a-a907-40cc-b71d-ff44c8c0878a"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Request",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:5050/order/delivery-orders/{{id}}/status",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5050",
+											"path": [
+												"order",
+												"delivery-orders",
+												"{{id}}",
+												"status"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

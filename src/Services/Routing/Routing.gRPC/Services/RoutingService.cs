@@ -1,4 +1,6 @@
-﻿namespace Routing.gRPC.Services
+﻿using SharedKernel.Exeptions;
+
+namespace Routing.gRPC.Services
 {
     public class RoutingService : RoutingProtoService.RoutingProtoServiceBase
     {
@@ -38,6 +40,59 @@
 
             return MapToRouteResponse(route);
         }
+
+
+        public override async Task<RouteResponse> UpdateRoute(UpdateRouteRequest request, ServerCallContext context)
+        {
+            var id = new Guid(request.RouteId);
+            var route = await _context.Routes.FindAsync(id, CancellationToken.None);
+
+            if(route == null)
+            {
+                throw new NotFoundException(nameof(route), request.RouteId);
+            }
+
+            var (distanceInKm, estimatedTime) = await _googleMapsService.GetRouteInfoAsync(request.Origin, request.Destination, CancellationToken.None);
+
+
+            route.UpdateRoute(
+                request.Origin,
+                request.Destination,
+                distanceInKm,
+                estimatedTime
+            );
+
+             _context.Routes.Update(route);
+            await _context.SaveChangesAsync();
+
+            return MapToRouteResponse(route);
+        }
+
+        public override async Task<RouteResponse> UpdateStatus(UpdateStatusRequest request, ServerCallContext context)
+        {
+
+            var id = new Guid(request.RouteId);
+            var route = await _context.Routes.FindAsync(id, CancellationToken.None);
+
+            if (route == null)
+            {
+                throw new NotFoundException(nameof(route), request.RouteId);
+            }
+
+
+
+
+
+            route.UpdateStatus((Enums.RouteStatus)request.Status);
+
+            _context.Routes.Update(route);
+            await _context.SaveChangesAsync();
+
+            return MapToRouteResponse(route);
+        }
+
+
+
 
         private RouteResponse MapToRouteResponse(Models.Route route)
         {

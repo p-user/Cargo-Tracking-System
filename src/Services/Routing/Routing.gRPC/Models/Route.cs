@@ -60,5 +60,30 @@ namespace Routing.gRPC.Models
                 return startTime.AddDays(7);
             }
         }
+
+        public void UpdateStatus(Enums.RouteStatus newStatus)
+        {
+            Status = newStatus;
+            //ToDo : add event for notification
+        }
+
+        public void UpdateRoute( string origin, string destination, double? distanceInKm, TimeSpan? estimatedTime)
+        {
+
+            if (string.IsNullOrWhiteSpace(origin))
+            {
+                throw new ArgumentException("Origin cannot be empty.");
+            }
+            if (string.IsNullOrWhiteSpace(destination))
+            {
+                throw new ArgumentException("Destination cannot be empty.");
+            }
+
+            Origin = origin;
+            Destination = destination;
+            DistanceInKm = distanceInKm;
+            EstimatedTime = estimatedTime;
+
+        }
     }
 }

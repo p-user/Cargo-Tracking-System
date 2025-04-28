@@ -21,6 +21,7 @@ service RoutingProtoService {
   rpc CreateRoute (CreateRouteRequest) returns (RouteResponse);
   rpc UpdateRoute (UpdateRouteRequest) returns (RouteResponse);
   rpc DeleteRoute (DeleteRouteRequest) returns (DeleteRouteResponse);
+   rpc UpdateStatus (UpdateStatusRequest) returns (RouteResponse);
 }
 
 // Messages
@@ -29,24 +30,23 @@ message RouteRequest {
    string route_id = 1;
 }
 
+message UpdateStatusRequest {
+	string route_id = 1;
+	RouteStatus status = 2;
+}
+
 
 message CreateRouteRequest {
    string order_id = 1;
    string origin = 2;
    string destination = 3;
-  optional double distance_in_km = 4;
-  optional string estimated_time = 5; 
-  optional string estimated_delivery_date = 6; 
 }
 
 message UpdateRouteRequest {
    string route_id = 1;
    string origin = 2;
    string destination = 3;
-  optional double distance_in_km = 4;
-  optional string estimated_time = 5;
-  optional string estimated_delivery_date = 6;
-   RouteStatus status = 7;
+   
 }
 
 message DeleteRouteRequest {

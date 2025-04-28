@@ -1,21 +1,95 @@
-services:
-    yarpapigateway:
-        image: ${DOCKER_REGISTRY-}yarpapigateway
-        build:
-          context: .
-          dockerfile: Gateways/YarpApiGateway/Dockerfile
-    orderdb:
-        image: mcr.microsoft.com/mssql/server
+# services:
+#     yarpapigateway:
+#         image: ${DOCKER_REGISTRY-}yarpapigateway
+#         build:
+#           context: .
+#           dockerfile: Gateways/YarpApiGateway/Dockerfile
+#     orderdb:
+#         image: mcr.microsoft.com/mssql/server
    
-    order.api:
-        image: ${DOCKER_REGISTRY-}orderapi
-        build:
-            context: .
-            dockerfile: Services/Order/Order.Api/Dockerfile
+#     order.api:
+#         image: ${DOCKER_REGISTRY-}orderapi
+#         build:
+#             context: .
+#             dockerfile: Services/Order/Order.Api/Dockerfile
 
-    routing.grpc:
-        image: ${DOCKER_REGISTRY-}routinggrpc
-        build:
-           context: .
-           dockerfile: Services/Routing/Routing.gRPC/Dockerfile
+#     routing.grpc:
+#         image: ${DOCKER_REGISTRY-}routinggrpc
+#         build:
+#            context: .
+#            dockerfile: Services/Routing/Routing.gRPC/Dockerfile
+
+services:
+  yarpapigateway:
+    image: ${DOCKER_REGISTRY-}yarpapigateway
+    build:
+      context: .
+      dockerfile: Gateways/YarpApiGateway/Dockerfile
+    networks:
+      - app-network
+    depends_on:
+      - order.api
+      - routing.grpc
+    ports:
+      - "80:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  orderdb:
+    image: mcr.microsoft.com/mssql/server
+    container_name: orderdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SwN12345678
+    restart: always
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+  order.api:
+    image: ${DOCKER_REGISTRY-}orderapi
+    build:
+      context: .
+      dockerfile: Services/Order/Order.Api/Dockerfile
+    networks:
+      - app-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=orderdb,1433;Database=CargoTS_ORDER;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True;
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  routing.grpc:
+    image: ${DOCKER_REGISTRY-}routinggrpc
+    build:
+      context: .
+      dockerfile: Services/Routing/Routing.gRPC/Dockerfile
+    networks:
+      - app-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "6002:8080"
+      - "6062:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+networks:
+  app-network:
+    driver: bridge
 

@@ -39,3 +39,20 @@ The **Cargo Tracking System** is a distributed microservices-based application d
 - 📍 **Google Maps API** integrated for routing and distance estimation.
 - 📬 **RabbitMQ + MassTransit**  for asynchronous messaging.
 - 📬 **Email Integration** in Notification Service for user updates.
+
+
+## Postman Collections and Environment
+
+Postman collections and environment for testing APIs are located in the `/Postman` folder.
+
+### Steps to Import
+
+1. Open Postman.
+2. Go to `File -> Import`.
+3. Import the collection(s) from `/Postman/Collections/`.
+4. Import the environment from `/Postman/Environments/`.
+5. Select the imported environment.
+
+### Notes
+- Make sure your local services (via Docker Compose) are running before sending requests.
+- Postman does not support exporting gRPC collections yet. You will need to import the proto file for yourself! 
