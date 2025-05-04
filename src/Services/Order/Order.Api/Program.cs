@@ -1,4 +1,3 @@
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +17,12 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCarter();
+
+
+builder.Services.AddMassTransit(builder.Configuration);
+
+//execeptions
+builder.Services.AddExceptionHandler<CustomExeptionHandler>();
 
 var app = builder.Build();
 

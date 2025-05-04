@@ -11,3 +11,5 @@ global using SharedKernel.CQRS;
 global using SharedKernel.Exeptions;
 global using SharedKernel.Extensions;
 global using SharedKernel.DDD;
+global using SharedKernel.Exeptions.Handlers;
+global using SharedKernel.Messaging.Extensions;
