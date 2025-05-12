@@ -9,6 +9,8 @@ namespace Order.Api.Data
         }
         public virtual DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

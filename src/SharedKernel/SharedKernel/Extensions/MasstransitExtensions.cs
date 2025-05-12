@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace SharedKernel.Messaging.Extensions
+namespace SharedKernel.Extensions
 {
     public static class MasstransitExtensions
     {
@@ -27,6 +27,8 @@ namespace SharedKernel.Messaging.Extensions
                         host.Password(_configuration["MessageBroker:Password"]);
                     });
 
+
+                    config.UseRawJsonSerializer();
                     config.ConfigureEndpoints(context);
                 });
             });

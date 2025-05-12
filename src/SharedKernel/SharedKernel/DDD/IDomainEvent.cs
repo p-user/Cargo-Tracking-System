@@ -3,7 +3,7 @@ using MediatR;
 
 namespace SharedKernel.DDD
 {
-    public interface IDomainEvent : INotification
+    public interface IDomainEvent 
     {
         Guid EventId => Guid.NewGuid();
         public DateTime OccurredOn => DateTime.Now;

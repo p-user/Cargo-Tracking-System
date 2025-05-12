@@ -1,5 +1,4 @@
 ﻿using Order.Api.Enums;
-using SharedKernel.DDD;
 
 namespace Order.Api.Models
 {
@@ -48,7 +47,7 @@ namespace Order.Api.Models
            
             if (cargo == null) throw new ArgumentNullException(nameof(cargo));
 
-            return new DeliveryOrder
+            var deliveryOrder =  new DeliveryOrder
             {
                 Id = Guid.NewGuid(),
                 CustomerId = customer.Id,
@@ -60,6 +59,10 @@ namespace Order.Api.Models
                 Status = DeliveryStatus.Created,
                 DeliveredAt = null,
             };
+
+            deliveryOrder.AddDomainEvent(new DeliveryOrderCreatedEvent(deliveryOrder.Id, deliveryOrder.PickupAddress, deliveryOrder.DeliveryAddress));
+
+            return deliveryOrder;
         }
 
 

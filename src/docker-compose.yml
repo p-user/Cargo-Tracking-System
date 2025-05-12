@@ -1,24 +1,3 @@
-# services:
-#     yarpapigateway:
-#         image: ${DOCKER_REGISTRY-}yarpapigateway
-#         build:
-#           context: .
-#           dockerfile: Gateways/YarpApiGateway/Dockerfile
-#     orderdb:
-#         image: mcr.microsoft.com/mssql/server
-   
-#     order.api:
-#         image: ${DOCKER_REGISTRY-}orderapi
-#         build:
-#             context: .
-#             dockerfile: Services/Order/Order.Api/Dockerfile
-
-#     routing.grpc:
-#         image: ${DOCKER_REGISTRY-}routinggrpc
-#         build:
-#            context: .
-#            dockerfile: Services/Routing/Routing.gRPC/Dockerfile
-
 services:
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
@@ -36,6 +15,20 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
+  messagebroker:
+    image: rabbitmq:management
+    container_name: messagebroker
+    hostname: cargotracking-mq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
   orderdb:
     image: mcr.microsoft.com/mssql/server
     container_name: orderdb
@@ -47,6 +40,7 @@ services:
       - "1433:1433"
     networks:
       - app-network
+   
 
   order.api:
     image: ${DOCKER_REGISTRY-}orderapi
@@ -60,6 +54,12 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__Database=Server=orderdb,1433;Database=CargoTS_ORDER;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True;
+      - MessageBroker__Host=amqp://cargotracking-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+    depends_on:
+      - orderdb
+      - messagebroker
     ports:
       - "6000:8080"
       - "6060:8081"
@@ -80,6 +80,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
+      - MessageBroker__Host=amqp://cargotracking-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+    depends_on:
+      - messagebroker
     ports:
       - "6002:8080"
       - "6062:8081"

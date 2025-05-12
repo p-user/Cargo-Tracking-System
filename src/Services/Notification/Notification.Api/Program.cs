@@ -1,5 +1,5 @@
-using SharedKernel.Messaging.Extensions;
-
+using MassTransit;
+using SharedKernel.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

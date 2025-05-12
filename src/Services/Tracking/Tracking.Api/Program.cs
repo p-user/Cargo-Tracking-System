@@ -1,5 +1,7 @@
-using SharedKernel.Messaging.Extensions;
 
+
+
+using SharedKernel.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(builder.Configuration);

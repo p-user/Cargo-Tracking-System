@@ -12,4 +12,7 @@ global using SharedKernel.Exeptions;
 global using SharedKernel.Extensions;
 global using SharedKernel.DDD;
 global using SharedKernel.Exeptions.Handlers;
-global using SharedKernel.Messaging.Extensions;
+global using MassTransit;
+global using Order.Api.Features.Customer.GetCustomerByEmail;
+global using SharedKernel.Events;
+global using SharedKernel.Data.Interceptors;

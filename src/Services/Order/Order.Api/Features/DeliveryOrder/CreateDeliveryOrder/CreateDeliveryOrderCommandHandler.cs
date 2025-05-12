@@ -1,5 +1,8 @@
 ﻿
-using Order.Api.Features.Customer.GetCustomerByEmail;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 {
@@ -8,7 +11,7 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 
     public record CreateDeliveryOrderCommandResponse(Guid Id);
 
-    public class CreateDeliveryOrderCommandHandler(OrderDbContext _context, IMapper _mapper, ISender _sender) : ICommandHandler<CreateDeliveryOrderCommand, CreateDeliveryOrderCommandResponse>
+    public class CreateDeliveryOrderCommandHandler(OrderDbContext _context, IMapper _mapper, ISender _sender, IPublishEndpoint publishEndpoint) : ICommandHandler<CreateDeliveryOrderCommand, CreateDeliveryOrderCommandResponse>
     {
         public async Task<CreateDeliveryOrderCommandResponse> Handle(CreateDeliveryOrderCommand request, CancellationToken cancellationToken)
         {
@@ -20,10 +23,44 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 
             var deliveryOrder = CreateDeliveryOrder(request.dto, cargo, customer);
 
-            await _context.DeliveryOrders.AddAsync(deliveryOrder, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+           
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
 
-            return new CreateDeliveryOrderCommandResponse(deliveryOrder.Id);
+                // Write all  message to the outbox
+                var outboxMsgs = new List<OutboxMessage>();
+
+                foreach (var item in deliveryOrder.DomainEvents)
+                {
+                    var outboxMessage = new OutboxMessage
+                    {
+                        Id = Guid.NewGuid(),
+                        Type =item.GetType().AssemblyQualifiedName!,
+                        Content = JsonSerializer.Serialize(item, item.GetType()),
+                        OccuredOn = DateTime.UtcNow
+                    };
+
+                    outboxMsgs.Add(outboxMessage);
+                }
+
+                await  _context.DeliveryOrders.AddAsync(deliveryOrder, cancellationToken);
+                await _context.OutboxMessages.AddRangeAsync(outboxMsgs, cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+               return new CreateDeliveryOrderCommandResponse(deliveryOrder.Id);
+            }
+
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return new CreateDeliveryOrderCommandResponse(Guid.Empty);
+            }
+
+
+
         }
 
 

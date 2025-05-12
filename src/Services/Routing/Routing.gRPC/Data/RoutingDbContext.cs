@@ -6,8 +6,8 @@ namespace Routing.gRPC.Data
     public class RoutingDbContext : DbContext
     {
 
-        public DbSet<Models.Route> Routes { get; set; } = default!;
-        //public DbSet<Models.Waypoint> Waypoints { get; set; } = default!;
+        public virtual DbSet<Models.Route> Routes { get; set; } = default!;
+        public virtual DbSet<Models.OutboxMessage> OutboxMessages => Set<Models.OutboxMessage>();
 
 
         public RoutingDbContext(DbContextOptions<RoutingDbContext> options) : base(options)

@@ -1,10 +1,26 @@
 
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Order.Api.Processors;
+using SharedKernel.Data.Interceptors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var assembly = typeof(Program).Assembly;
 
-builder.Services.AddDbContext<OrderDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<AuditableEntityInterceptor>();
+builder.Services.AddScoped<DistpachDomainEventInterceptor>();
+
+builder.Services.AddDbContext<OrderDbContext>((sp, options) =>
+{
+    var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
+    var dispatchInterceptor = sp.GetRequiredService<DistpachDomainEventInterceptor>();
+
+    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+   
+
+});
 
 builder.Services.AddAutoMapper(assembly);
 
@@ -17,9 +33,9 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCarter();
+builder.Services.AddHostedService<OutboxProcessor>();
 
-
-builder.Services.AddMassTransit(builder.Configuration);
+builder.Services.AddMassTransit(builder.Configuration, assembly);
 
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
