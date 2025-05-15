@@ -5,4 +5,6 @@ global using Routing.gRPC.Services;
 global using Grpc.Core;
 global using Routing.gRPC.Protos;
 global using SharedKernel.Extensions;
-
+global using Routing.gRPC.Processors;
+global using SharedKernel.Data.Interceptors;
+global using System.Reflection;

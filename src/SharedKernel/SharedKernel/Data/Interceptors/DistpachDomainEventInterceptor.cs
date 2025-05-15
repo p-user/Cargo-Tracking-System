@@ -1,61 +1,68 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using SharedKernel.Data.DbContext;
+using SharedKernel.Data.OutBox;
 using SharedKernel.DDD;
+using System.Text.Json;
+
 
 namespace SharedKernel.Data.Interceptors
 {
-    public class DistpachDomainEventInterceptor : SaveChangesInterceptor
+    public class DispatchDomainEventInterceptor<TContext> : SaveChangesInterceptor where TContext : Microsoft.EntityFrameworkCore.DbContext, IApplicationDbContext
     {
-        private readonly IServiceProvider _serviceProvider;
+      
+       
 
-        public DistpachDomainEventInterceptor(IServiceProvider serviceProvider)
+        public DispatchDomainEventInterceptor()
         {
-            _serviceProvider = serviceProvider;
+            
         }
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
-            DispatchDomainEvents(eventData.Context).GetAwaiter().GetResult();
+            DispatchDomainEvents(eventData.Context as TContext).GetAwaiter().GetResult();
             return base.SavingChanges(eventData, result);
         }
 
-        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
+            CancellationToken cancellationToken = default)
         {
-            await DispatchDomainEvents(eventData.Context);
+            await DispatchDomainEvents(eventData.Context as TContext);
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
-        private async Task DispatchDomainEvents(DbContext dbContext)
+        private async Task DispatchDomainEvents(TContext? dbContext)
         {
-            if (dbContext == null) { return; }
+            if (dbContext == null) return;
 
-
-            //retrive entitties with domain events
+            // Retrieve entities with domain events
             var aggregates = dbContext.ChangeTracker
                 .Entries<IAggregate>()
-                .Where(s => s.Entity.DomainEvents.Any())
-                .Select(s => s.Entity);
+                .Where(entry => entry.Entity.DomainEvents.Any())
+                .Select(entry => entry.Entity)
+                .ToList();
 
-           
+            var domainEvents = aggregates.SelectMany(agg => agg.DomainEvents).ToList();
 
-            var domainEvents = aggregates.SelectMany(s => s.DomainEvents).ToList();
-
-            //clear events in the entitities
-            foreach (var item in aggregates)
+            // Clear domain events
+            foreach (var aggregate in aggregates)
             {
-                item.ClearDomainEvents();
+                aggregate.ClearDomainEvents();
             }
 
-            //dispatch using massTransit
-            using var scope = _serviceProvider.CreateScope();
-            var _publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
-            foreach (var domainEvent in domainEvents)
+            foreach(var domainEvent in domainEvents)
             {
-                await _publishEndpoint.Publish(domainEvent);
+                var outboxMessage = new OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    Type =domainEvent.GetType().AssemblyQualifiedName!,
+                    Content = JsonSerializer.Serialize(domainEvent, domainEvent.GetType()),
+                    OccuredOn = DateTime.UtcNow
+                };
+
+                await dbContext.OutboxMessages.AddAsync(outboxMessage);
             }
         }
-
     }
 }

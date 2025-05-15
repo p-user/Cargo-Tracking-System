@@ -1,4 +1,6 @@
-﻿namespace Order.Api.Models
+﻿using SharedKernel.DDD;
+
+namespace SharedKernel.Data.OutBox
 {
     public class OutboxMessage : Entity<Guid>
     {
@@ -7,5 +9,4 @@
         public DateTime OccuredOn { get; set; } = default!;
         public DateTime? ProcessedOn { get; set; } = default!;
     }
-
 }

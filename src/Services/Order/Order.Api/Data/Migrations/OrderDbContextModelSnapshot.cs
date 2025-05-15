@@ -54,7 +54,7 @@ namespace Order.Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Order.Api.Models.DeliveryOrder", b =>
@@ -107,7 +107,7 @@ namespace Order.Api.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("DeliveryOrders");
+                    b.ToTable("DeliveryOrders", (string)null);
                 });
 
             modelBuilder.Entity("Order.Api.Models.OutboxMessage", b =>
@@ -144,7 +144,7 @@ namespace Order.Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OutboxMessages");
+                    b.ToTable("OutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("Order.Api.Models.Customer", b =>
@@ -174,7 +174,7 @@ namespace Order.Api.Data.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customers");
+                            b1.ToTable("Customers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
@@ -216,7 +216,7 @@ namespace Order.Api.Data.Migrations
 
                             b1.HasKey("DeliveryOrderId");
 
-                            b1.ToTable("DeliveryOrders");
+                            b1.ToTable("DeliveryOrders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("DeliveryOrderId");

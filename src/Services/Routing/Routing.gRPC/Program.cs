@@ -1,22 +1,17 @@
 
 
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Routing.gRPC.Processors;
-using SharedKernel.Data.Interceptors;
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DistpachDomainEventInterceptor>();
+builder.Services.AddScoped<DispatchDomainEventInterceptor<RoutingDbContext>>();
 builder.Services.AddGrpc();
 builder.Services.AddMassTransit(builder.Configuration,Assembly.GetExecutingAssembly());
 builder.Services.AddHostedService<OutboxProcessor>();
 builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DistpachDomainEventInterceptor>();
+    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor<RoutingDbContext>>();
 
     options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));

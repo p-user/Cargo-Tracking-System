@@ -27,26 +27,9 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-
-                // Write all  message to the outbox
-                var outboxMsgs = new List<OutboxMessage>();
-
-                foreach (var item in deliveryOrder.DomainEvents)
-                {
-                    var outboxMessage = new OutboxMessage
-                    {
-                        Id = Guid.NewGuid(),
-                        Type =item.GetType().AssemblyQualifiedName!,
-                        Content = JsonSerializer.Serialize(item, item.GetType()),
-                        OccuredOn = DateTime.UtcNow
-                    };
-
-                    outboxMsgs.Add(outboxMessage);
-                }
-
                 await  _context.DeliveryOrders.AddAsync(deliveryOrder, cancellationToken);
-                await _context.OutboxMessages.AddRangeAsync(outboxMsgs, cancellationToken);
-
+               
+                //On savechanges the domain messages will be saved on the outbox table
                 await _context.SaveChangesAsync(cancellationToken);
 
                 await transaction.CommitAsync(cancellationToken);
@@ -58,8 +41,6 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
                 await transaction.RollbackAsync(cancellationToken);
                 return new CreateDeliveryOrderCommandResponse(Guid.Empty);
             }
-
-
 
         }
 

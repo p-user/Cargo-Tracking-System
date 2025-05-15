@@ -19,7 +19,7 @@ namespace SharedKernel.Data.Interceptors
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
-        private void UpdateEntities(DbContext? context)
+        private void UpdateEntities(Microsoft.EntityFrameworkCore.DbContext? context)
         {
             if (context == null) return;
 
