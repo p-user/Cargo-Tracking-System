@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 

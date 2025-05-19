@@ -1,0 +1,34 @@
+{
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithEnvironmentName", "WithCorrelationId" ],
+    "Properties": {
+      "Application": "Shared.Logging"
+    },
+    "WriteTo": [
+      {
+        "Name": "Console"
+      },
+      {
+        "Name": "Elasticsearch",
+        "Args": {
+          "nodeUris": "http://localhost:9200",
+          "dataStream": {
+            "type": "logs",
+            "dataset": "shared.logging",
+            "namespace": "development"
+          },
+          "useDataStream": true,
+          "autoRegisterTemplate": true,
+          "bootstrapMethod": "Create"
+        }
+      }
+    ]
+  }
+}
