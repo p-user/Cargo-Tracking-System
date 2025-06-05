@@ -1,4 +1,7 @@
 using Serilog.Debugging;
+using SharedKernel.Logging;
+using SharedKernel.Logging.Extensions;
+using SharedKernel.OpenApi.Extensions;
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,16 +11,28 @@ string environment = builder.Environment.EnvironmentName;
 string serviceName = builder.Environment.ApplicationName;
 
 #region Serilog
-Serilogger.ConfigureLogger(environment, serviceName);
-builder.Host.UseSerilog();
+var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();
+
+// Conditionally enable Serilog
+if (serilogOptions.Enabled)
+{
+    builder.AddCustomSerilog(configurator: opt =>
+    {
+        opt.ElasticSearchUrl = serilogOptions.ElasticSearchUrl;
+        opt.UseConsole = serilogOptions.UseConsole;
+        opt.LogTemplate = serilogOptions.LogTemplate;
+    });
+}
+
+
 
 //Add Correlation ID middleware
-builder.Services.AddDefaultCorrelationId(options =>
-{
-    options.UpdateTraceIdentifier = true;
-    options.IncludeInResponse = true;
-    options.ResponseHeader = "X-Correlation-ID";
-});
+//builder.Services.AddDefaultCorrelationId(options =>
+//{
+//    options.UpdateTraceIdentifier = true;
+//    options.IncludeInResponse = true;
+//    options.ResponseHeader = "X-Correlation-ID";
+//});
 
 #endregion
 
@@ -48,7 +63,7 @@ builder.Services.AddMediatR(config =>
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+
 builder.Services.AddCarter();
 builder.Services.AddHostedService<OutboxProcessor<OrderDbContext>>();
 
@@ -56,21 +71,24 @@ builder.Services.AddMassTransit(builder.Configuration, assembly);
 
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
+builder.AddAspnetOpenApi(["v1"]);
 
 var app = builder.Build();
-app.UseCorrelationId();
-app.UseSerilogRequestLogging();
+//app.UseCorrelationId();
+
 app.ApplyMigrations<OrderDbContext>();
 app.UseRouting();
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-    
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.MapOpenApi();
+//    app.MapScalarApiReference();
+
+//}
+
 app.MapCarter();
+app.UseAspnetOpenApi();
+
 
 Log.Information("Test log");
-app.Run();
+await app.RunAsync();
 
-AppDomain.CurrentDomain.ProcessExit += (s, e) => Serilogger.CloseAndFlush();

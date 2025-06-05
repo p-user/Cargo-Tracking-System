@@ -2,8 +2,8 @@ using CorrelationId;
 using CorrelationId.DependencyInjection;
 using MassTransit;
 using Serilog;
-using Shared.Logging;
 using SharedKernel.Extensions;
+using SharedKernel.Logging.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 string environment = builder.Environment.EnvironmentName;
 string serviceName = builder.Environment.ApplicationName;
 
-Serilogger.ConfigureLogger(environment, serviceName);
+DependencyInjection.ConfigureLogger(environment, serviceName);
 builder.Host.UseSerilog();
 
 //Add Correlation ID middleware

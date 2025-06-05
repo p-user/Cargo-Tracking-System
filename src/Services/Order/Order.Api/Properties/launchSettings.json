@@ -2,7 +2,8 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
+      "launchUrl": "scalar", // Open Scalar UI on launch
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -11,7 +12,8 @@
     },
     "https": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
+      "launchUrl": "scalar", // Open Scalar UI on launch
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -20,8 +22,8 @@
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
-      "launchBrowser": false,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/scalar",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
         "ASPNETCORE_HTTP_PORTS": "8080"

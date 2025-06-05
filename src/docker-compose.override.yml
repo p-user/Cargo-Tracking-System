@@ -1,7 +1,9 @@
-services:
+version: '3.9'
 
+services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -12,29 +14,51 @@ services:
         soft: -1
         hard: -1
     ports:
-      - 9200:9200
+      - "9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - app-network
-    
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: kibana
     ports:
-      - 5601:5601
+      - "5601:5601"
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     depends_on:
-      - elasticsearch    
+      - elasticsearch
     networks:
       - app-network
- 
+
   yarpapigateway:
+    image: ${DOCKER_REGISTRY-}yarpapigateway
+    build:
+      context: .
+      dockerfile: Gateways/YarpApiGateway/Dockerfile
+    container_name: yarpapigateway
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_URLS=https://+:8081;http://+:8080
     ports:
-      - "6004:8080"
-      - "6064:8081"
+      - "6004:8080" # HTTP
+      - "6064:8081" # HTTPS (used for Scalar & gRPC)
+    depends_on:
+      - elasticsearch
+      - kibana
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    networks:
+      - app-network
+
+volumes:
+  elasticsearch-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

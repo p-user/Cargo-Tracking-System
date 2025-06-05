@@ -1,30 +1,36 @@
 
 
-using CorrelationId;
-using CorrelationId.DependencyInjection;
-using Scalar.AspNetCore;
-using Serilog;
-using Shared.Logging;
-using System;
+using SharedKernel.Logging;
+using SharedKernel.Logging.Extensions;
+using SharedKernel.OpenApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.AddAspnetOpenApi(["v1"]);
+
 #region Serilog
+var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();
 
-string environment = builder.Environment.EnvironmentName;
-string serviceName = builder.Environment.ApplicationName;
+// Conditionally enable Serilog
+if (serilogOptions.Enabled)
+{
+    builder.AddCustomSerilog(configurator: opt =>
+    {
+        opt.ElasticSearchUrl = serilogOptions.ElasticSearchUrl;
+        opt.UseConsole = serilogOptions.UseConsole;
+        opt.LogTemplate = serilogOptions.LogTemplate;
+    });
+}
 
-Serilogger.ConfigureLogger(environment, serviceName);
-builder.Host.UseSerilog();
+
 
 //Add Correlation ID middleware
-builder.Services.AddDefaultCorrelationId(options =>
-{
-    options.UpdateTraceIdentifier = true;
-    options.IncludeInResponse = true;
-    options.ResponseHeader = "X-Correlation-ID";
-});
+//builder.Services.AddDefaultCorrelationId(options =>
+//{
+//    options.UpdateTraceIdentifier = true;
+//    options.IncludeInResponse = true;
+//    options.ResponseHeader = "X-Correlation-ID";
+//});
 
 #endregion
 
@@ -46,20 +52,20 @@ builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
 builder.Services.AddHttpClient<GoogleMapsService>();
 builder.Services.AddSingleton<GoogleMapsService>();
 builder.Services.AddScoped<IRoutingApplicationService,RoutingApplicationService>();
-builder.Services.AddOpenApi();
-builder.Host.UseSerilog();
 
 var app = builder.Build();
-app.UseCorrelationId();
-app.UseSerilogRequestLogging();
+//app.UseCorrelationId();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapGrpcReflectionService();
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    //app.MapOpenApi();
+   // app.MapScalarApiReference();
 }
 
 // Configure the HTTP request pipeline.
+app.UseRouting();
 app.MapGrpcService<RoutingService>();
+app.UseAspnetOpenApi();
 app.EnsureSeedData();
 app.Run();

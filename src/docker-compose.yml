@@ -1,4 +1,4 @@
-services:
+﻿services:
   yarpapigateway:
     image: ${DOCKER_REGISTRY-}yarpapigateway
     build:

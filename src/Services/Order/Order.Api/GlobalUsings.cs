@@ -17,7 +17,7 @@ global using Order.Api.Features.Customer.GetCustomerByEmail;
 global using SharedKernel.Events;
 global using SharedKernel.Data.Interceptors;
 global using Serilog;
-global using Shared.Logging;
+global using SharedKernel.Logging;
 global using SharedKernel.Data.OutBox;
 global using CorrelationId;
 global using CorrelationId.DependencyInjection;

@@ -1,6 +1,14 @@
 # 📦 Cargo Tracking System — Microservices Architecture in .NET
 
-The **Cargo Tracking System** is a distributed microservices-based application developed using **.NET**, designed to manage and track cargo shipments efficiently. The system is containerized with **Docker** and adopts modern architectural patterns to ensure scalability, maintainability, and separation of concerns.
+The **Cargo Tracking System** is a fictional cargo  delivery, distributed microservices-based application developed using **.NET**, designed to manage and track cargo shipments efficiently.It leverages various modern architectural patterns and technologies, including **Microservices Architecture**, **Vertical Slice Architecture**, **CQRS**, **Domain-Driven Design (DDD)**, and **Event-Driven Architecture**. Communication between independent services primarily occurs through asynchronous messaging using **RabbitMQ** with the **MassTransit** library. For real-time scenarios, the system also supports synchronous communication via **REST** and **gRPC**.
+The entire system is containerized with **Docker** and adopts modern architectural patterns to ensure scalability, maintainability, and separation of concerns.
+
+
+> 💡 **Note**  
+> This application is **not business-oriented**. The primary focus is on the **technical aspects** — implementing a sample project that showcases various **technologies**, **software architecture designs**, **principles**, and all the essentials required to build a modern **microservices application**.
+
+> ⚠️ **Warning**  
+> This project is **a work in progress**. New features and improvements are added over time.
 
 ---
 
@@ -31,14 +39,19 @@ The **Cargo Tracking System** is a distributed microservices-based application d
 
 ## ⚙️ Architecture & Technologies
 
-- 🧱 **Microservices-based** with clear service boundaries.
+- 🧱 **Microservices-based** architecture with clear service boundaries.
 - 🚢 **Docker** for containerization and isolated service deployment.
 - ⚔️ **CQRS + MediatR** used across services for clean separation of read/write logic.
-- 🗂️ **Vertical Slice Architecture** adopted in all services except Routing for modular feature-based design.
-- 🌐 **gRPC** used for high-performance communication in the Routing Service.
+- 🗂️ **Vertical Slice Architecture** adopted in all services (except the Routing Service) for modular, feature-based design.
+- 🌐 **gRPC** used in the Routing Service for high-performance, real-time communication.
 - 📍 **Google Maps API** integrated for routing and distance estimation.
-- 📬 **RabbitMQ + MassTransit**  for asynchronous messaging.
-- 📬 **Email Integration** in Notification Service for user updates.
+- 📬 **RabbitMQ + MassTransit** for asynchronous messaging between services.
+- ✉️ **Email integration** in the Notification Service for sending user updates.
+- 📊 **Structured logging** using **Serilog**, with logs exported to **Elasticsearch** and visualized in **Kibana** via the `serilog-sinks-elasticsearch` sink.
+- 📦 **Outbox Pattern** implemented across all microservices for **guaranteed** or **at-least-once delivery**.
+- 🔀 **YARP** reverse proxy used as the **API Gateway** for routing external traffic to internal services.
+
+
 
 
 ## Postman Collections and Environment
