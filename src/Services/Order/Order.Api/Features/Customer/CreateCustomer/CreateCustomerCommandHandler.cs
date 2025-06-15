@@ -9,7 +9,7 @@ namespace Order.Api.Features.Customer.CreateCustomer
     {
         public async Task<CreateCustomerCommandResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var validCustomer = await _sender.Send(new GetCustomerByEmailCommand(request.dto));
+            var validCustomer = await _sender.Send(new GetCustomerByEmailQuery(request.dto.Email));
             if (validCustomer.viewCustomerDto != null)
             {
                 throw new Exception("Another customer with this email address already registered!");

@@ -3,8 +3,17 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "yarpapigateway",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/scalar",
       "serviceActions": {
-        "order.api": "StartDebugging"
+        "order.api": "StartDebugging",
+        "elasticsearch": "StartWithoutDebugging",
+        "kibana": "StartWithoutDebugging",
+        "messagebroker": "StartWithoutDebugging",
+        "orderdb": "StartWithoutDebugging",
+        "routing.grpc": "StartDebugging",
+        "yarpapigateway": "StartDebugging"
       }
     }
   }

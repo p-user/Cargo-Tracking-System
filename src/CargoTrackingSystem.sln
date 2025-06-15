@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Logging", "Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.OpenApi", "SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj", "{45120820-AFCD-4EA8-862B-06C9D40E542E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Email", "SharedKernel\SharedKernel.Email\SharedKernel.Email.csproj", "{4B28587A-119A-4E67-830B-0CAEF6A72F03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{45120820-AFCD-4EA8-862B-06C9D40E542E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45120820-AFCD-4EA8-862B-06C9D40E542E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45120820-AFCD-4EA8-862B-06C9D40E542E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B28587A-119A-4E67-830B-0CAEF6A72F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B28587A-119A-4E67-830B-0CAEF6A72F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B28587A-119A-4E67-830B-0CAEF6A72F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B28587A-119A-4E67-830B-0CAEF6A72F03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{4A11E0F3-424A-44EE-97BF-7125EF70D3A7} = {8CCFE760-F9AD-4304-A5FC-5066AEF08C2D}
 		{3C3D860A-132B-4A12-AE9C-CDBF7F66D149} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
 		{45120820-AFCD-4EA8-862B-06C9D40E542E} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
+		{4B28587A-119A-4E67-830B-0CAEF6A72F03} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {893C9B20-F780-4105-990C-D3AE3BA5300E}

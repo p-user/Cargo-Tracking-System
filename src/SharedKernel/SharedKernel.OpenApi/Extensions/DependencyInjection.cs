@@ -3,46 +3,35 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Scalar.AspNetCore;
-using SharedKernel.OpenApi.DocumentTransformers;
+
+
 
 namespace SharedKernel.OpenApi.Extensions
 {
-    public static  class DependencyInjection
+    public static class DependencyInjection
     {
-        public static WebApplicationBuilder AddAspnetOpenApi(this WebApplicationBuilder builder, string[] versions)
-        {
-            // Bind OpenApiOptions from configuration
-            builder.Services.Configure<OpenApiOptions>(builder.Configuration.GetSection(nameof(OpenApiOptions)));
 
-
-            foreach (var documentName in versions)
+            public static IServiceCollection AddAspnetOpenApi(this IServiceCollection services)
             {
-                builder.Services.AddOpenApi(documentName, options =>
-                    {
-                        //ToDo add authentication
-                        options.AddDocumentTransformer<OpenApiVersioningDocumentTransformer>();
-                        options.AddOperationTransformer<OpenApiDefaultValuesOperationTransformer>();
-                        options.AddSchemaTransformer<EnumSchemaTransformer>();
-                    }
-                );
+                services.AddOpenApi();
+                return services;
             }
 
-            return builder;
-        }
-
-
-        public static WebApplication UseAspnetOpenApi(this WebApplication app)
+        public static IApplicationBuilder UseAspnetOpenApi(this WebApplication app, string apiTitle = "API")
         {
             app.MapOpenApi();
-
             app.MapScalarApiReference("/scalar", options =>
             {
-                options.WithOpenApiRoutePattern("/openapi/{documentName}.json")
-                       .WithTheme(ScalarTheme.Purple)
-                       .WithDownloadButton(true);
+               options.WithTitle(apiTitle);
+                options.WithOpenApiRoutePattern("/openapi/v1.json");
             });
+
 
             return app;
         }
+
     }
+
+
+
 }

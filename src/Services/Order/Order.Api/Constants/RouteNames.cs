@@ -13,5 +13,6 @@
         public const string UpdateTrackingDetails = "UpdateTrackingDetails";
         public const string CreateCustomer = "CreateCustomer";
         public const string GetCustomerById = "GetCustomerById";
+        public const string GetCustomerByEmail = "GetCustomerByEmail";
     }
 }

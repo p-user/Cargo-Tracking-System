@@ -4,6 +4,7 @@
     {
         public const string DeliveryOrders = "Delivery Orders";
         public const string CargoDetails = "Cargo Details";
+        public const string Customers = "Customers";
 
     }
 }

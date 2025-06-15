@@ -6,7 +6,7 @@ using SharedKernel.OpenApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddAspnetOpenApi(["v1"]);
+builder.Services.AddAspnetOpenApi();
 
 #region Serilog
 var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();

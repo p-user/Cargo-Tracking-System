@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Order.Api.Features.Customer.CreateCustomer;
 
 namespace Order.Api.Features.Customer.GetCustomerById
 {
@@ -12,7 +11,7 @@ namespace Order.Api.Features.Customer.GetCustomerById
              .WithName(RouteNames.GetCustomerById)
              .Produces<GetCustomerByIdQueryResponse>(StatusCodes.Status201Created)
              .Produces(StatusCodes.Status400BadRequest)
-             .WithTags(TagNames.DeliveryOrders);
+             .WithTags(TagNames.Customers);
         }
 
         private async Task<IResult> GetCustomer([FromRoute]Guid id, ISender sender)

@@ -16,7 +16,7 @@ namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
         public async Task<CreateDeliveryOrderCommandResponse> Handle(CreateDeliveryOrderCommand request, CancellationToken cancellationToken)
         {
             //verify customer 
-            var customerVM = await _sender.Send(new GetCustomerByEmailCommand(request.dto.Customer));
+            var customerVM = await _sender.Send(new GetCustomerByEmailQuery(request.dto.Customer.Email));
             var customer = _mapper.Map<Models.Customer>(customerVM.viewCustomerDto);
 
             var cargo = _mapper.Map<CargoDetails>(request.dto.Cargo);

@@ -1,3 +1,4 @@
+using Carter;
 using Serilog.Debugging;
 using SharedKernel.Logging;
 using SharedKernel.Logging.Extensions;
@@ -36,7 +37,7 @@ if (serilogOptions.Enabled)
 
 #endregion
 
-
+#region Db_interceptos
 builder.Services.AddScoped<AuditableEntityInterceptor>();
 builder.Services.AddScoped<DispatchDomainEventInterceptor<OrderDbContext>>();
 
@@ -51,6 +52,8 @@ builder.Services.AddDbContext<OrderDbContext>((sp, options) =>
 
 });
 
+#endregion
+
 
 builder.Services.AddAutoMapper(assembly);
 
@@ -62,32 +65,25 @@ builder.Services.AddMediatR(config =>
 });
 
 
+builder.Services.AddCarter(); 
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddCarter();
 builder.Services.AddHostedService<OutboxProcessor<OrderDbContext>>();
-
 builder.Services.AddMassTransit(builder.Configuration, assembly);
 
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
-builder.AddAspnetOpenApi(["v1"]);
+builder.Services.AddAspnetOpenApi();
+
 
 var app = builder.Build();
 //app.UseCorrelationId();
 
 app.ApplyMigrations<OrderDbContext>();
 app.UseRouting();
-//if (app.Environment.IsDevelopment())
-//{
-//    app.MapOpenApi();
-//    app.MapScalarApiReference();
-
-//}
-
 app.MapCarter();
-app.UseAspnetOpenApi();
+app.UseAspnetOpenApi(serviceName);
 
+app.UseHttpsRedirection();
 
 Log.Information("Test log");
 await app.RunAsync();

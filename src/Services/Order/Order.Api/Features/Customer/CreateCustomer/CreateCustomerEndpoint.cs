@@ -11,7 +11,8 @@ namespace Order.Api.Features.Customer.CreateCustomer
              .WithName(RouteNames.CreateCustomer)
              .Produces<CreateCustomerCommandResponse>(StatusCodes.Status201Created)
              .Produces(StatusCodes.Status400BadRequest)
-             .WithTags(TagNames.DeliveryOrders);
+             .WithTags(TagNames.Customers);
+            
         }
 
 
