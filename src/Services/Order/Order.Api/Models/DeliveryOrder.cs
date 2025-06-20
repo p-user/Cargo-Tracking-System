@@ -1,5 +1,4 @@
-﻿using Order.Api.Enums;
-
+﻿
 namespace Order.Api.Models
 {
     public class DeliveryOrder : Aggregate<Guid>

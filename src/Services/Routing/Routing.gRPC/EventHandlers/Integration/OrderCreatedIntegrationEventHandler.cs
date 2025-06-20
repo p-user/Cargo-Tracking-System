@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using SharedKernel.Events;
+using SharedKernel.Messaging.Events;
 
 
 namespace Routing.gRPC.EventHandlers.Integration

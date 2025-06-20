@@ -1,5 +1,7 @@
 ﻿
-namespace SharedKernel.DDD
+
+
+namespace SharedKernel.Core.DDD
 {
     public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
     {

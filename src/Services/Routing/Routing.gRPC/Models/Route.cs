@@ -1,7 +1,4 @@
-﻿using Routing.gRPC.Enums;
-using SharedKernel.DDD;
-
-namespace Routing.gRPC.Models
+﻿namespace Routing.gRPC.Models
 {
     public class Route : Aggregate<Guid>
     {

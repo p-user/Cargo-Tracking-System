@@ -1,10 +1,4 @@
-﻿
-using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-
-namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
+﻿namespace Order.Api.Features.DeliveryOrder.CreateDeliveryOrder
 {
 
     public record CreateDeliveryOrderCommand(CreateDeliveryOrderDto dto) : ICommand<CreateDeliveryOrderCommandResponse>;

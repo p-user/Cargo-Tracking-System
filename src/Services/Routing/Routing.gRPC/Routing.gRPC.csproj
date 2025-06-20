@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.71.0" />
     <PackageReference Include="Grpc.Core" Version="2.46.6" />
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
@@ -38,12 +39,15 @@
 
    <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Protobuf Include="Protos\routing.proto" GrpcServices="Server" />
+    <Content Include="Protos\routing.proto">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
 
 	 
   </ItemGroup>

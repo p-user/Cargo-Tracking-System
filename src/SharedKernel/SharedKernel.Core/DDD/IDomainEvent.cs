@@ -1,7 +1,5 @@
 ﻿
-using MediatR;
-
-namespace SharedKernel.DDD
+namespace SharedKernel.Core.DDD
 {
     public interface IDomainEvent 
     {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using SharedKernel.Data.DbContext;
-using SharedKernel.Data.OutBox;
-using SharedKernel.DDD;
+using SharedKernel.Core.Data.DbContext;
+using SharedKernel.Core.DDD;
+using SharedKernel.Core.DefaultEntities;
 using System.Text.Json;
 
 
-namespace SharedKernel.Data.Interceptors
+namespace SharedKernel.Core.Data.Interceptors
 {
     public class DispatchDomainEventInterceptor<TContext> : SaveChangesInterceptor where TContext : Microsoft.EntityFrameworkCore.DbContext, IApplicationDbContext
     {

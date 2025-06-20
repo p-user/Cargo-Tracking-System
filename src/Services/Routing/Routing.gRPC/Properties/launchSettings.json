@@ -3,9 +3,9 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "scalar",
+      "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Local"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5002"
@@ -13,16 +13,16 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "scalar",
+      "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Local"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:5052;http://localhost:5002"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/scalar",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
         "ASPNETCORE_HTTP_PORTS": "8080"

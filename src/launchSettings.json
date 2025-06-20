@@ -5,7 +5,7 @@
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
       "composeLaunchServiceName": "yarpapigateway",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/scalar",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "order.api": "StartDebugging",
         "elasticsearch": "StartWithoutDebugging",

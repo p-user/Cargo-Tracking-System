@@ -1,50 +1,36 @@
 
-using Scalar.AspNetCore;
-using SharedKernel.OpenApi;
-using SharedKernel.OpenApi.Extensions;
-
+using SharedKernel.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
 
 builder
     .Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 
-// Add Scalar + OpenAPI
-builder.Services.AddOpenApi();
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseRouting();
 
-app.MapReverseProxy();
-
-app.MapScalarApiReference(options =>
+app.UseSwagger(); 
+app.UseSwaggerUI(options =>
 {
-    options.WithTitle("Cargo Tracking API Gateway");
-    options.DefaultFonts = false;
-
-    // Add a document entry for each microservice.
-    // Note: The routePattern ('/openapi/order.json') must match the YARP route path.Ndryshe spunon
-
-    options.AddDocument(
-        documentName: "Orders",
-        title: "Orders Service API",
-        routePattern: "/openapi/order.json"
-    );
-
-
-    options.AddDocument(
-        documentName: "Route",
-        title: "Route Service API",
-        routePattern: "/openapi/route.json"
-    );
-
+       
+options.RoutePrefix = string.Empty;
+options.SwaggerEndpoint("/order/swagger/v1/swagger.json", "Order API v1");
+options.SwaggerEndpoint("/routing/swagger/v1/swagger.json", "Routing gRPC v1");
 });
 
 
+app.MapReverseProxy();
 
 
 await app.RunAsync();

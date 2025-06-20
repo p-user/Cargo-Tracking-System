@@ -8,3 +8,13 @@ global using SharedKernel.Extensions;
 global using Routing.gRPC.Processors;
 global using SharedKernel.Data.Interceptors;
 global using System.Reflection;
+global using Routing.gRPC.Enums;
+global using SharedKernel.Core.DDD;
+global using SharedKernel.Core.Data.Interceptors;
+global using SharedKernel.Logging;
+global using SharedKernel.Logging.Extensions;
+global using SharedKernel.OpenApi.Extensions;
+global using SharedKernel.Core.Extensions;
+global using Microsoft.AspNetCore.Grpc.Swagger;
+
+

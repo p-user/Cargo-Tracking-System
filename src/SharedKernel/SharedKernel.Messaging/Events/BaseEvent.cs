@@ -1,5 +1,7 @@
-﻿using SharedKernel.DDD;
-namespace SharedKernel.Events
+﻿
+using SharedKernel.Core.DDD;
+
+namespace SharedKernel.Messaging
 {
     public record BaseEvent : IDomainEvent
     {

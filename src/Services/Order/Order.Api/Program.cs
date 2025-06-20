@@ -1,10 +1,8 @@
-using Carter;
-using Serilog.Debugging;
-using SharedKernel.Logging;
-using SharedKernel.Logging.Extensions;
-using SharedKernel.OpenApi.Extensions;
+
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
 
 var assembly = typeof(Program).Assembly;
 
@@ -72,7 +70,7 @@ builder.Services.AddMassTransit(builder.Configuration, assembly);
 
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
-builder.Services.AddAspnetOpenApi();
+builder.Services.AddAspnetOpenApi("Order API", "v1");
 
 
 var app = builder.Build();
@@ -81,7 +79,7 @@ var app = builder.Build();
 app.ApplyMigrations<OrderDbContext>();
 app.UseRouting();
 app.MapCarter();
-app.UseAspnetOpenApi(serviceName);
+app.UseAspnetOpenApi("v1");
 
 app.UseHttpsRedirection();
 

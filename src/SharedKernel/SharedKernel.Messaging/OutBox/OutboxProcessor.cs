@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SharedKernel.Data.DbContext;
+using SharedKernel.Core.Data.DbContext;
 using System.Text.Json;
 
-namespace SharedKernel.Data.OutBox
+namespace SharedKernel.Messaging.Extensions
 {
-    public class OutboxProcessor<TContext> : BackgroundService
-        where TContext : IApplicationDbContext
+    public class OutboxProcessor<TContext> : BackgroundService  where TContext : IApplicationDbContext
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;

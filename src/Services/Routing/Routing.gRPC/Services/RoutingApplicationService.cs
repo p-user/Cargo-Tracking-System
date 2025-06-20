@@ -105,7 +105,7 @@ namespace Routing.gRPC.Services
                     DistanceInKm = route.DistanceInKm ?? 0,
                     EstimatedTime = route.EstimatedTime?.ToString() ?? "",
                     EstimatedDeliveryDate = route.EstimatedDeliveryDate?.ToString() ?? "",
-                    Status = (RouteStatus)route.Status
+                    Status = (Protos.RouteStatus)route.Status
                 };
 
 

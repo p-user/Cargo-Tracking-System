@@ -1,5 +1,6 @@
-﻿using SharedKernel.Data.DbContext;
-using SharedKernel.Data.OutBox;
+﻿using SharedKernel.Core.Data.DbContext;
+using SharedKernel.Core.DefaultEntities;
+
 using System.Reflection;
 
 namespace Routing.gRPC.Data
@@ -9,6 +10,7 @@ namespace Routing.gRPC.Data
 
         public virtual DbSet<Models.Route> Routes { get; set; } = default!;
         public virtual DbSet<OutboxMessage> OutboxMessages { get ; set ; } = default!;
+        public virtual DbSet<InboxMessage> InboxMessages { get ; set ; } = default!;
 
         public RoutingDbContext(DbContextOptions<RoutingDbContext> options) : base(options)
         {

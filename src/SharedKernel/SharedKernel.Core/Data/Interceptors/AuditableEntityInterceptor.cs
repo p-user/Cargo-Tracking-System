@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SharedKernel.DDD;
+using SharedKernel.Core.DDD;
 
 namespace SharedKernel.Data.Interceptors
 {

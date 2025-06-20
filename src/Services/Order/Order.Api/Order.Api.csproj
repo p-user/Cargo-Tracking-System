@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

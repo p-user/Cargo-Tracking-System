@@ -1,6 +1,8 @@
-﻿using SharedKernel.DDD;
+﻿
 
-namespace SharedKernel.Data.OutBox
+using SharedKernel.Core.DDD;
+
+namespace SharedKernel.Core.DefaultEntities
 {
     public class OutboxMessage : Entity<Guid>
     {

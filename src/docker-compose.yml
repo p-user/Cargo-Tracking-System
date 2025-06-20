@@ -1,19 +1,39 @@
 ﻿services:
-  yarpapigateway:
-    image: ${DOCKER_REGISTRY-}yarpapigateway
-    build:
-      context: .
-      dockerfile: Gateways/YarpApiGateway/Dockerfile
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx2g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - app-network
-    depends_on:
-      - order.api
-      - routing.grpc
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    container_name: kibana
     ports:
-      - "80:80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0' 
+          memory: 2G 
 
   messagebroker:
     image: rabbitmq:management
@@ -40,7 +60,6 @@
       - "1433:1433"
     networks:
       - app-network
-   
 
   order.api:
     image: ${DOCKER_REGISTRY-}orderapi
@@ -51,8 +70,9 @@
       - app-network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https-dev.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
       - ConnectionStrings__Database=Server=orderdb,1433;Database=CargoTS_ORDER;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True;
       - MessageBroker__Host=amqp://cargotracking-mq:5672
       - MessageBroker__UserName=guest
@@ -64,12 +84,10 @@
       - elasticsearch
     ports:
       - "6000:8080"
-      - "6060:8081"
+      - "6060:8081" 
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ./https-dev.pfx:/https/https-dev.pfx:ro
 
   routing.grpc:
     image: ${DOCKER_REGISTRY-}routinggrpc
@@ -80,8 +98,9 @@
       - app-network
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https-dev.pfx 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
       - MessageBroker__Host=amqp://cargotracking-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
@@ -91,17 +110,35 @@
       - elasticsearch
     ports:
       - "6002:8080"
-      - "6062:8081"
+      - "6062:8081" 
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ./https-dev.pfx:/https/https-dev.pfx:ro
 
-  elasticsearch:
-   container_name: elasticsearch
-  kibana:
-    container_name: kibana
+  yarpapigateway:
+    build:
+      context: .
+      dockerfile: Gateways/YarpApiGateway/Dockerfile
+    image: yarpapigateway
+    container_name: yarpapigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https-dev.pfx 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
+    ports:
+      - "6004:8080"
+      - "6064:8081"
+    depends_on:
+      - order.api
+      - routing.grpc
+      - elasticsearch
+      - kibana
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ./https-dev.pfx:/https/https-dev.pfx:ro
+    networks:
+      - app-network
 
 volumes:
   elasticsearch-data:
@@ -110,4 +147,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-

@@ -13,7 +13,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/Routing/Routing.gRPC/Routing.gRPC.csproj", "Services/Routing/Routing.gRPC/"]
-COPY ["SharedKernel/SharedKernel/SharedKernel.csproj", "SharedKernel/SharedKernel/"]
+COPY ["SharedKernel/SharedKernel.Logging/SharedKernel.Logging.csproj", "SharedKernel/SharedKernel.Logging/"]
+COPY ["SharedKernel/SharedKernel.Messaging/SharedKernel.Messaging.csproj", "SharedKernel/SharedKernel.Messaging/"]
+COPY ["SharedKernel/SharedKernel.OpenApi/SharedKernel.OpenApi.csproj", "SharedKernel/SharedKernel.OpenApi/"]
+COPY ["SharedKernel/SharedKernel.Core/SharedKernel.Core.csproj", "SharedKernel/SharedKernel.Core/"]
+
 RUN dotnet restore "./Services/Routing/Routing.gRPC/Routing.gRPC.csproj"
 COPY . .
 WORKDIR "/src/Services/Routing/Routing.gRPC"

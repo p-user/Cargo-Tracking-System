@@ -1,11 +1,7 @@
-﻿using SharedKernel.DDD;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using SharedKernel.Core.DDD;
 
-namespace SharedKernel.Events
+namespace SharedKernel.Messaging.Events
 {
     public record DeliveryOrderCreatedEvent : IDomainEvent
     {

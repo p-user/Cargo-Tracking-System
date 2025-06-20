@@ -1,12 +1,10 @@
 
 
-using SharedKernel.Logging;
-using SharedKernel.Logging.Extensions;
-using SharedKernel.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAspnetOpenApi();
+builder.WebHost.ConfigureCustomKestrelForGrpc(builder.Environment.EnvironmentName);
 
 #region Serilog
 var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();
@@ -36,8 +34,24 @@ if (serilogOptions.Enabled)
 
 builder.Services.AddScoped<AuditableEntityInterceptor>();
 builder.Services.AddScoped<DispatchDomainEventInterceptor<RoutingDbContext>>();
-builder.Services.AddGrpc();
-builder.Services.AddGrpcReflection();
+
+builder.Services.AddGrpc().AddJsonTranscoding();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddGrpcSwagger();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Routing gRPC Service",
+        Version = "v1"
+    });
+
+   
+
+});
+
+
 builder.Services.AddMassTransit(builder.Configuration,Assembly.GetExecutingAssembly());
 builder.Services.AddHostedService<OutboxProcessor>();
 builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
@@ -56,16 +70,19 @@ builder.Services.AddScoped<IRoutingApplicationService,RoutingApplicationService>
 var app = builder.Build();
 //app.UseCorrelationId();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapGrpcReflectionService();
-    //app.MapOpenApi();
-   // app.MapScalarApiReference();
-}
+
 
 // Configure the HTTP request pipeline.
 app.UseRouting();
+
+    
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Routing gRPC v1");
+});
+
 app.MapGrpcService<RoutingService>();
-app.UseAspnetOpenApi();
+
 app.EnsureSeedData();
 app.Run();

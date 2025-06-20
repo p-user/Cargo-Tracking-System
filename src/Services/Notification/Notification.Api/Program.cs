@@ -2,17 +2,20 @@ using CorrelationId;
 using CorrelationId.DependencyInjection;
 using MassTransit;
 using Serilog;
+using SharedKernel.Core.Extensions;
 using SharedKernel.Extensions;
-using SharedKernel.Logging.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
 
 #region Serilog
 
 string environment = builder.Environment.EnvironmentName;
 string serviceName = builder.Environment.ApplicationName;
 
-DependencyInjection.ConfigureLogger(environment, serviceName);
+
 builder.Host.UseSerilog();
 
 //Add Correlation ID middleware

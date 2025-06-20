@@ -1,6 +1,4 @@
 ﻿
-using System.Net;
-
 namespace Order.Api.Models
 {
     public class Customer : Entity<Guid>
