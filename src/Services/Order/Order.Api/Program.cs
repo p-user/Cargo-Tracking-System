@@ -2,12 +2,13 @@
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
 
 var assembly = typeof(Program).Assembly;
 
 string environment = builder.Environment.EnvironmentName;
 string serviceName = builder.Environment.ApplicationName;
+
+builder.WebHost.ConfigureCustomKestrelForRest(environment);
 
 #region Serilog
 var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();

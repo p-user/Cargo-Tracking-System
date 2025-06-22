@@ -1,4 +1,7 @@
 ﻿
+
+using Routing.gRPC.Protos;
+
 namespace Routing.gRPC.Services
 {
     public interface IRoutingApplicationService

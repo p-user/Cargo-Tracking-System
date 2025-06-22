@@ -1,5 +1,10 @@
 syntax = "proto3";
 
+
+import "google/api/annotations.proto";
+import "google/api/http.proto";
+
+
 option csharp_namespace = "Routing.gRPC.Protos";
 
 package Routing;
@@ -17,11 +22,36 @@ enum RouteStatus {
 
 // Routing service
 service RoutingProtoService {
-  rpc GetRoute (RouteRequest) returns (RouteResponse);
-  rpc CreateRoute (CreateRouteRequest) returns (RouteResponse);
-  rpc UpdateRoute (UpdateRouteRequest) returns (RouteResponse);
-  rpc DeleteRoute (DeleteRouteRequest) returns (DeleteRouteResponse);
-   rpc UpdateStatus (UpdateStatusRequest) returns (RouteResponse);
+  rpc GetRoute (RouteRequest) returns (RouteResponse){
+    option (google.api.http) = {
+      get: "/v1/routes/{route_id}"
+    };
+  }
+
+
+  rpc CreateRoute (CreateRouteRequest) returns (RouteResponse){
+    option (google.api.http) = {
+      post: "/v1/routes"
+      body: "*"
+    };
+  }
+
+
+  rpc UpdateRoute (UpdateRouteRequest) returns (RouteResponse) {
+    option (google.api.http) = {
+      put: "/v1/routes/{route_id}"
+      body: "*"
+    };
+  }
+
+
+  //rpc DeleteRoute (DeleteRouteRequest) returns (DeleteRouteResponse);
+   rpc UpdateStatus (UpdateStatusRequest) returns (RouteResponse){
+    option (google.api.http) = {
+      patch: "/v1/routes/{route_id}/status"
+      body: "*"
+    };
+  }
 }
 
 // Messages

@@ -1,4 +1,4 @@
-﻿using SharedKernel.Exeptions;
+﻿using SharedKernel.Core.Exeptions;
 
 namespace Routing.gRPC.Services
 {
@@ -16,7 +16,7 @@ namespace Routing.gRPC.Services
         {
 
             return await _routingservice.GetRoute(request);
-            
+
         }
 
         public override async Task<RouteResponse> CreateRoute(CreateRouteRequest request, ServerCallContext context)

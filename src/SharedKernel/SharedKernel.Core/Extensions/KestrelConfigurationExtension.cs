@@ -24,7 +24,7 @@ namespace SharedKernel.Core.Extensions
                     options.ListenAnyIP(8081, listenOptions =>
                     {
                         listenOptions.UseHttps();
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                     });
                 });
             }

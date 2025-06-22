@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Email", "Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Messaging", "SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj", "{5483F88A-8D01-4C70-9F9F-6FFA57D6C744}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.CommonProtos", "SharedKernel\SharedKernel.CommonProtos\SharedKernel.CommonProtos.csproj", "{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,10 @@ Global
 		{5483F88A-8D01-4C70-9F9F-6FFA57D6C744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5483F88A-8D01-4C70-9F9F-6FFA57D6C744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5483F88A-8D01-4C70-9F9F-6FFA57D6C744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{45120820-AFCD-4EA8-862B-06C9D40E542E} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
 		{4B28587A-119A-4E67-830B-0CAEF6A72F03} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
 		{5483F88A-8D01-4C70-9F9F-6FFA57D6C744} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
+		{7ED66CBC-9214-4AC7-A830-7BDEBA1CDBE4} = {FEF9CE4E-3369-49A7-BCB2-4A20CF431E31}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {893C9B20-F780-4105-990C-D3AE3BA5300E}

@@ -13,21 +13,13 @@
     <Compile Remove="ProtoServices\RoutingService.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Protos\routing.proto" />
-  </ItemGroup>
-
   
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
-    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
-    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.71.0" />
-    <PackageReference Include="Grpc.Core" Version="2.46.6" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -38,18 +30,18 @@
   </ItemGroup>
 
    <ItemGroup>
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />
+     <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\routing.proto" Link="Protos/routing.proto" GrpcServices="Server" />
+     <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\http.proto" Link="Protos/google/api/http.proto"/>
+     <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\annotations.proto" Link="Protos/google/api/annotations.proto"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <Protobuf Include="Protos\routing.proto" GrpcServices="Server" />
-    <Content Include="Protos\routing.proto">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-
-	 
-  </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.CommonProtos\SharedKernel.CommonProtos.csproj" />
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Core\SharedKernel.Core.csproj" />
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Email\SharedKernel.Email.csproj" />
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
+     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />
+   </ItemGroup>
 
 </Project>

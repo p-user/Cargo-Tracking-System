@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace SharedKernel.Exeptions.Handlers
+namespace SharedKernel.Core.Exeptions.Handlers
 {
     public class CustomExeptionHandler(ILogger<CustomExeptionHandler> _logger) : IExceptionHandler
     {
