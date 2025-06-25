@@ -2,7 +2,7 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureCustomKestrelForGrpc(builder.Environment.EnvironmentName);
+builder.WebHost.ConfigureCustomKestrelForGrpc();
 
 #region Serilog
 var serilogOptions = builder.Configuration.BindOptions<SerilogOptions>();

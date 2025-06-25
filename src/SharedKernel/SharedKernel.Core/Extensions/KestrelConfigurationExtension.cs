@@ -2,56 +2,131 @@
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using SharedKernel.Core.Configurations;
 
 namespace SharedKernel.Core.Extensions
 {
     public static class KestrelConfigurationExtension
     {
-        public static IWebHostBuilder ConfigureCustomKestrelForRest(this IWebHostBuilder builder, string environmentName)
+        public static IWebHostBuilder ConfigureCustomKestrelForRest(this IWebHostBuilder builder)
         {
-            if (!string.Equals(environmentName, "Local", StringComparison.OrdinalIgnoreCase))
-            {
-                builder.ConfigureKestrel(options =>
+            
+                builder.ConfigureKestrel((context, options) =>
                 {
+                    var kestrelConfig = context.Configuration.GetSection("KestrelEndpoints");
 
-                    options.ListenAnyIP(8080, listenOptions =>
+                    if (!kestrelConfig.Exists())
                     {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
+                        throw new Exception("KestrelConfig not provided!");
+                    }
 
+                    var endpoints = new Dictionary<string, KestrelEndpointConfig>();
+                    kestrelConfig.Bind(endpoints);
 
-                    options.ListenAnyIP(8081, listenOptions =>
+                    bool isLocal = context.HostingEnvironment.IsEnvironment("Local");
+
+                    if (endpoints.TryGetValue("Http", out var httpEndpoint) && httpEndpoint.Port > 0)
                     {
-                        listenOptions.UseHttps();
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
+                        Action<ListenOptions> configureHttp = listenOptions =>
+                        {
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        };
+
+                        if (isLocal)
+                        {
+                            options.ListenLocalhost(httpEndpoint.Port, configureHttp);
+                        }
+                        else
+                        {
+                            options.ListenAnyIP(httpEndpoint.Port, configureHttp);
+                        }
+                    }
+
+                    if (endpoints.TryGetValue("Https", out var httpsEndpoint) && httpsEndpoint.Port > 0)
+                    {
+                        Action<ListenOptions> configureHttps = listenOptions =>
+                        {
+                            listenOptions.UseHttps();
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        };
+
+
+                        if (isLocal)
+                        {
+                            options.ListenLocalhost(httpsEndpoint.Port, configureHttps);
+                        }
+                        else
+                        {
+                            options.ListenAnyIP(httpsEndpoint.Port, configureHttps);
+                        }
+                    }
                 });
-            }
+           
+               
+            
 
-            return builder;
+                return builder;
         }
 
-        public static IWebHostBuilder ConfigureCustomKestrelForGrpc(this IWebHostBuilder builder, string environmentName)
+        public static IWebHostBuilder ConfigureCustomKestrelForGrpc(this IWebHostBuilder builder)
         {
-            if (!string.Equals(environmentName, "Local", StringComparison.OrdinalIgnoreCase))
-            {
-                builder.ConfigureKestrel(options =>
+
+            
+                builder.ConfigureKestrel((context,options) =>
                 {
 
-                    options.ListenAnyIP(8080, listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
+                var kestrelConfig = context.Configuration.GetSection("KestrelEndpoints");
 
+                if (!kestrelConfig.Exists())
+                {
+                    throw new Exception("KestrelConfig not provided!");
+                }
 
-                    options.ListenAnyIP(8081, listenOptions =>
+                var endpoints = new Dictionary<string, KestrelEndpointConfig>();
+                kestrelConfig.Bind(endpoints);
+
+                bool isLocal = context.HostingEnvironment.IsEnvironment("Local");
+
+                    if (endpoints.TryGetValue("Http", out var httpEndpoint) && httpEndpoint.Port > 0)
                     {
-                        listenOptions.UseHttps();
-                        listenOptions.Protocols = HttpProtocols.Http2;
-                    });
+                        Action<ListenOptions> configureHttp = listenOptions =>
+                        {
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        };
+
+                        if (isLocal)
+                        {
+                            options.ListenLocalhost(httpEndpoint.Port, configureHttp);
+                        }
+                        else
+                        {
+                            options.ListenAnyIP(httpEndpoint.Port, configureHttp);
+                        }
+
+                        
+                    }
+
+                    if (endpoints.TryGetValue("Https", out var httpsEndpoint) && httpsEndpoint.Port > 0)
+                    {
+                        Action<ListenOptions> configureHttps = listenOptions =>
+                        {
+                            listenOptions.UseHttps();
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        };
+
+                        if (isLocal)
+                        {
+                            options.ListenLocalhost(httpsEndpoint.Port, configureHttps);
+                        }
+                        else
+                        {
+                            options.ListenAnyIP(httpsEndpoint.Port, configureHttps);
+                        }
+                    }
                 });
-            }
+            
 
             return builder;
         }

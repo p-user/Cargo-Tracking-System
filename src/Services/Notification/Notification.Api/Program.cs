@@ -8,7 +8,7 @@ using SharedKernel.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
+builder.WebHost.ConfigureCustomKestrelForRest();
 
 #region Serilog
 

@@ -7,7 +7,8 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-builder.WebHost.ConfigureCustomKestrelForRest(builder.Environment.EnvironmentName);
+
+builder.WebHost.ConfigureCustomKestrelForRest();
 
 builder
     .Services.AddReverseProxy()

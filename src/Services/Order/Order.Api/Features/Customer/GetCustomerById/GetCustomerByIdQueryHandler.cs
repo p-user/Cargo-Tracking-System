@@ -1,4 +1,6 @@
 ﻿
+
+
 namespace Order.Api.Features.Customer.GetCustomerById
 {
     public record GetCustomerByIdQuery(Guid id) : IQuery<GetCustomerByIdQueryResponse>;
