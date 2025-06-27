@@ -1,23 +1,42 @@
 ﻿
 
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using MassTransit.EntityFrameworkCoreIntegration;
 
-namespace SharedKernel.Extensions
+namespace SharedKernel.Messaging.Extensions
 {
     public static class MasstransitExtensions
     {
-        public static IServiceCollection AddMassTransit (this IServiceCollection _services, IConfiguration _configuration, Assembly? assembly=null)
+        public static IServiceCollection AddMassTransit<TDbContext>(this IServiceCollection _services, IConfiguration _configuration, Assembly assembly, Action<IEntityFrameworkOutboxConfigurator> dbOutboxConfigurator) where TDbContext : DbContext
         {
             _services.AddMassTransit(config =>
+
             {
                 config.SetKebabCaseEndpointNameFormatter();
-                if (assembly != null)
+
+               
+                  config.AddConsumers(assembly);
+                
+
+                // Configure the EF Core Transactional Outbox
+                config.AddEntityFrameworkOutbox<TDbContext>(o =>
                 {
-                    config.AddConsumers(assembly);
-                }
+                    // How often the background service polls the outbox table.
+                    o.QueryDelay = TimeSpan.FromSeconds(10);
+                  
+
+                    // Idempotency (Inbox) configuration
+                    o.DuplicateDetectionWindow = TimeSpan.FromMinutes(30);
+
+
+                    dbOutboxConfigurator?.Invoke(o);
+                });
+
+
 
                 config.UsingRabbitMq((context, config) => 
                 {
@@ -28,8 +47,11 @@ namespace SharedKernel.Extensions
                     });
 
 
-                    config.UseRawJsonSerializer();
+
+                    config.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(5)));
                     config.ConfigureEndpoints(context);
+
+                    
                 });
             });
             return _services;

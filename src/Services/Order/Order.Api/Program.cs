@@ -1,5 +1,5 @@
 
-using SharedKernel.Core.Exeptions.Handlers;
+using System.Reflection;
 
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
@@ -68,8 +68,14 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddCarter(); 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHostedService<OutboxProcessor<OrderDbContext>>();
-builder.Services.AddMassTransit(builder.Configuration, assembly);
+builder.Services.AddMassTransit<OrderDbContext>(
+    builder.Configuration,
+    assembly,
+    dbOutboxConfig =>
+    {
+        dbOutboxConfig.UseSqlServer().UseBusOutbox();
+    }
+);
 
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
@@ -79,13 +85,11 @@ builder.Services.AddAspnetOpenApi("Order API", "v1");
 var app = builder.Build();
 //app.UseCorrelationId();
 
-app.ApplyMigrations<OrderDbContext>();
+app.EnsureSeedData<OrderDbContext>();
 app.UseRouting();
 app.MapCarter();
 app.UseAspnetOpenApi("v1");
 
-app.UseHttpsRedirection();
-
-Log.Information("Test log");
+//app.UseHttpsRedirection();
 await app.RunAsync();
 

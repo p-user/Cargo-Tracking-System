@@ -17,6 +17,8 @@ COPY ["SharedKernel/SharedKernel.Logging/SharedKernel.Logging.csproj", "SharedKe
 COPY ["SharedKernel/SharedKernel.Messaging/SharedKernel.Messaging.csproj", "SharedKernel/SharedKernel.Messaging/"]
 COPY ["SharedKernel/SharedKernel.OpenApi/SharedKernel.OpenApi.csproj", "SharedKernel/SharedKernel.OpenApi/"]
 COPY ["SharedKernel/SharedKernel.Core/SharedKernel.Core.csproj", "SharedKernel/SharedKernel.Core/"]
+COPY ["SharedKernel/SharedKernel.CommonProtos/SharedKernel.CommonProtos.csproj", "SharedKernel/SharedKernel.CommonProtos/"]
+COPY ["SharedKernel/SharedKernel.Email/SharedKernel.Email.csproj", "SharedKernel/SharedKernel.Email/"]
 RUN dotnet restore "./Services/Order/Order.Api/Order.Api.csproj"
 COPY . .
 WORKDIR "/src/Services/Order/Order.Api"

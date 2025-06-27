@@ -1,5 +1,8 @@
 
 
+
+using MassTransit;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureCustomKestrelForGrpc();
@@ -49,8 +52,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-builder.Services.AddMassTransit(builder.Configuration,Assembly.GetExecutingAssembly());
-builder.Services.AddHostedService<OutboxProcessor>();
+builder.Services.AddMassTransit<RoutingDbContext>(
+    builder.Configuration,
+    Assembly.GetExecutingAssembly(),
+    dbOutboxConfig =>
+    {
+        dbOutboxConfig.UseSqlite().UseBusOutbox();
+    }
+);
 
 
 var basePath = AppContext.BaseDirectory;

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Routing.gRPC.Data;
 
@@ -10,9 +11,11 @@ using Routing.gRPC.Data;
 namespace Routing.gRPC.Data.Migrations
 {
     [DbContext(typeof(RoutingDbContext))]
-    partial class RoutingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250627184504_OutboxInboxPatternUpdate2")]
+    partial class OutboxInboxPatternUpdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");

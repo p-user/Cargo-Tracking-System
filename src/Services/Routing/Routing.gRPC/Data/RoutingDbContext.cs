@@ -1,7 +1,5 @@
-﻿using SharedKernel.Core.Data.DbContext;
-using SharedKernel.Core.DefaultEntities;
-
-using System.Reflection;
+﻿using MassTransit;
+using SharedKernel.Core.Data.DbContext;
 
 namespace Routing.gRPC.Data
 {
@@ -9,8 +7,6 @@ namespace Routing.gRPC.Data
     {
 
         public virtual DbSet<Models.Route> Routes { get; set; } = default!;
-        public virtual DbSet<OutboxMessage> OutboxMessages { get ; set ; } = default!;
-        public virtual DbSet<InboxMessage> InboxMessages { get ; set ; } = default!;
 
         public RoutingDbContext(DbContextOptions<RoutingDbContext> options) : base(options)
         {
@@ -21,6 +17,9 @@ namespace Routing.gRPC.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.AddOutboxStateEntity();
+            modelBuilder.AddInboxStateEntity();
+            modelBuilder.AddOutboxMessageEntity();
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 

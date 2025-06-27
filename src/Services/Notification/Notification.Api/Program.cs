@@ -28,7 +28,7 @@ builder.Services.AddDefaultCorrelationId(options =>
 
 #endregion
 
-builder.Services.AddMassTransit(builder.Configuration);
+//builder.Services.AddMassTransit(builder.Configuration);
 
 var app = builder.Build();
 

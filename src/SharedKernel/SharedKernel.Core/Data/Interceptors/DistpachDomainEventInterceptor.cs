@@ -1,20 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SharedKernel.Core.Data.DbContext;
 using SharedKernel.Core.DDD;
-using SharedKernel.Core.DefaultEntities;
-using System.Text.Json;
 
 
 namespace SharedKernel.Core.Data.Interceptors
 {
     public class DispatchDomainEventInterceptor<TContext> : SaveChangesInterceptor where TContext : Microsoft.EntityFrameworkCore.DbContext, IApplicationDbContext
     {
-      
-       
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public DispatchDomainEventInterceptor()
+
+        public DispatchDomainEventInterceptor(IPublishEndpoint publishEndpoint)
         {
-            
+            _publishEndpoint = publishEndpoint;
         }
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -23,10 +22,7 @@ namespace SharedKernel.Core.Data.Interceptors
             return base.SavingChanges(eventData, result);
         }
 
-        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
-            DbContextEventData eventData,
-            InterceptionResult<int> result,
-            CancellationToken cancellationToken = default)
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,InterceptionResult<int> result,CancellationToken cancellationToken = default)
         {
             await DispatchDomainEvents(eventData.Context as TContext);
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -51,17 +47,9 @@ namespace SharedKernel.Core.Data.Interceptors
                 aggregate.ClearDomainEvents();
             }
 
-            foreach(var domainEvent in domainEvents)
+            foreach (var domainEvent in domainEvents)
             {
-                var outboxMessage = new OutboxMessage
-                {
-                    Id = Guid.NewGuid(),
-                    Type =domainEvent.GetType().AssemblyQualifiedName!,
-                    Content = JsonSerializer.Serialize(domainEvent, domainEvent.GetType()),
-                    OccuredOn = DateTime.UtcNow
-                };
-
-                await dbContext.OutboxMessages.AddAsync(outboxMessage);
+                await  _publishEndpoint.Publish(domainEvent);
             }
         }
     }

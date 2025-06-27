@@ -1,5 +1,4 @@
 ﻿using SharedKernel.Core.Data.DbContext;
-using SharedKernel.Core.DefaultEntities;
 using System.Reflection;
 
 namespace Order.Api.Data
@@ -11,12 +10,13 @@ namespace Order.Api.Data
         }
         public virtual DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<OutboxMessage> OutboxMessages { get; set ; }
-        public virtual DbSet<InboxMessage> InboxMessages { get; set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.AddOutboxStateEntity();
+            modelBuilder.AddInboxStateEntity();
+            modelBuilder.AddOutboxMessageEntity();
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
 
