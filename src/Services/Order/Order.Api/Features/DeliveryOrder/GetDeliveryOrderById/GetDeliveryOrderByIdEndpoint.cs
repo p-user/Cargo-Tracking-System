@@ -17,8 +17,11 @@ namespace Order.Api.Features.DeliveryOrder.GetDeliveryOrderById
         private async Task<IResult> GetDeliveryOrderById([FromRoute] Guid id, ISender sender)
         {
             var query = new GetDeliveryOrderByIdQuery(id);
+           
             var response = await sender.Send(query);
             return Results.Ok(response.dto);
+
+            
         }
     }
 }

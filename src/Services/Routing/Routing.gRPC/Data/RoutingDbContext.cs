@@ -1,9 +1,8 @@
 ﻿using MassTransit;
-using SharedKernel.Core.Data.DbContext;
 
 namespace Routing.gRPC.Data
 {
-    public class RoutingDbContext : DbContext, IApplicationDbContext
+    public class RoutingDbContext : DbContext
     {
 
         public virtual DbSet<Models.Route> Routes { get; set; } = default!;

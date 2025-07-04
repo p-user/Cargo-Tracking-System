@@ -1,9 +1,8 @@
-﻿using SharedKernel.Core.Data.DbContext;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Order.Api.Data
 {
-    public class OrderDbContext : DbContext, IApplicationDbContext
+    public class OrderDbContext : DbContext
     {
         public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
         {

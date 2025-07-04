@@ -10,6 +10,8 @@ namespace Order.Api.Features.DeliveryOrder.GetDeliveryOrderById
     {
         public async Task<GetDeliveryOrderByIdResponse> Handle(GetDeliveryOrderByIdQuery request, CancellationToken cancellationToken)
         {
+
+
             var deliveryOrder = await _context.DeliveryOrders
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);

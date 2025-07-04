@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
-using SharedKernel.Core.Data.DbContext;
 
 namespace Order.Api.Data
 {

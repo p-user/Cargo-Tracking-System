@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using SharedKernel.Core.Configurations;
 
 namespace SharedKernel.Core.Extensions
@@ -12,9 +13,9 @@ namespace SharedKernel.Core.Extensions
     {
         public static IWebHostBuilder ConfigureCustomKestrelForRest(this IWebHostBuilder builder)
         {
-            
-                builder.ConfigureKestrel((context, options) =>
+            builder.ConfigureKestrel((context, options) =>
                 {
+                  options.AllowSynchronousIO = true;
                     var kestrelConfig = context.Configuration.GetSection("KestrelEndpoints");
 
                     if (!kestrelConfig.Exists())
@@ -31,7 +32,7 @@ namespace SharedKernel.Core.Extensions
                     {
                         Action<ListenOptions> configureHttp = listenOptions =>
                         {
-                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                            listenOptions.Protocols = HttpProtocols.Http1;
                         };
 
                         if (isLocal)

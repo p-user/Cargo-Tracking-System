@@ -9,41 +9,31 @@
         public static IApplicationBuilder EnsureSeedData<TContext>(this IApplicationBuilder app) where TContext : DbContext
         {
 
-            var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
-            var loggerFactory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger("MigrationExtensions");
 
-
-            var services = new ServiceCollection();
-
-            services.AddDbContext<TContext>(options =>
-            {
-
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-
-            });
-
-            var serviceProvider = services.BuildServiceProvider();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<TContext>();
+            using var scope = app.ApplicationServices.CreateScope();
+            var services = scope.ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<TContext>>();
 
             try
             {
                 logger.LogInformation("Applying database migrations for {DbContextName}...", typeof(TContext).Name);
 
                
+                var dbContext = services.GetRequiredService<TContext>();
+
                 dbContext.Database.Migrate();
 
-                logger.LogInformation("Database migrations applied successfully.");
+                logger.LogInformation("Database migrations applied successfully for {DbContextName}.", typeof(TContext).Name);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred while applying database migrations for {DbContextName}.", typeof(TContext).Name);
-                throw;
+                throw; 
             }
 
             return app;
         }
     }
+    
+    
 }

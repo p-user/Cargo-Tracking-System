@@ -22,7 +22,7 @@ namespace SharedKernel.Messaging.Extensions
                   config.AddConsumers(assembly);
                 
 
-                // Configure the EF Core Transactional Outbox
+               
                 config.AddEntityFrameworkOutbox<TDbContext>(o =>
                 {
                     // How often the background service polls the outbox table.
@@ -31,7 +31,7 @@ namespace SharedKernel.Messaging.Extensions
 
                     // Idempotency (Inbox) configuration
                     o.DuplicateDetectionWindow = TimeSpan.FromMinutes(30);
-
+                    
 
                     dbOutboxConfigurator?.Invoke(o);
                 });

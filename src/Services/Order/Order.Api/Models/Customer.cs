@@ -3,10 +3,10 @@ namespace Order.Api.Models
 {
     public class Customer : Entity<Guid>
     {
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public Address Address { get; set; }
+        public string FullName { get; private set; }
+        public string Email { get; private set; }
+        public string Phone { get; private set; }
+        public Address Address { get; private set; }
 
         private Customer() { }
 

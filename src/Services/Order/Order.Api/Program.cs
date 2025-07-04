@@ -1,5 +1,4 @@
 
-using System.Reflection;
 
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
@@ -40,18 +39,22 @@ if (serilogOptions.Enabled)
 
 #region Db_interceptos
 builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DispatchDomainEventInterceptor<OrderDbContext>>();
+builder.Services.AddScoped<DispatchDomainEventInterceptor>();
 
 builder.Services.AddDbContext<OrderDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor<OrderDbContext>>();
+    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
 
     options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
    
 
+
 });
+
+
+
 
 #endregion
 
@@ -68,6 +71,8 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddCarter(); 
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddMassTransit<OrderDbContext>(
     builder.Configuration,
     assembly,

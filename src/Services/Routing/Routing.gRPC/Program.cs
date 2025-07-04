@@ -34,7 +34,7 @@ if (serilogOptions.Enabled)
 #endregion
 
 builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DispatchDomainEventInterceptor<RoutingDbContext>>();
+builder.Services.AddScoped<DispatchDomainEventInterceptor>();
 
 builder.Services.AddGrpc().AddJsonTranscoding();
 builder.Services.AddGrpcSwagger();
@@ -66,7 +66,7 @@ var basePath = AppContext.BaseDirectory;
 builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor<RoutingDbContext>>();
+    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
 
     options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
 
