@@ -61,6 +61,19 @@
     networks:
       - app-network
 
+  trackingdb:
+    image: postgres:17
+    container_name: trackingdb
+    environment:
+      - POSTGRES_DB=trackingdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=SwN12345678
+    ports:
+     - "5432:5432"
+    restart: always
+    networks:
+      - app-network
+  
   order.api:
     image: ${DOCKER_REGISTRY-}orderapi
     build:
@@ -114,7 +127,33 @@
     volumes:
       # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ./https-dev.pfx:/https/https-dev.pfx:ro
-
+  tracking.api:
+    image: ${DOCKER_REGISTRY-}trackingapi
+    build:
+      context: .
+      dockerfile: Services/Tracking/Tracking.Api/Dockerfile
+    networks:
+      - app-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https-dev.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456
+      - ConnectionStrings__Database=Server=trackingdb,1433;Database=CargoTS_TRACKING;User Id=sa;Password=SwN12345678;TrustServerCertificate=True;
+      - MessageBroker__Host=amqp://cargotracking-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+      - Elasticsearch__Uri=http://elasticsearch:9200
+    depends_on:
+      - trackingdb
+      - messagebroker
+      - elasticsearch
+    ports:
+      - "6003:8080"
+      - "6063:8081" 
+    volumes:
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ./https-dev.pfx:/https/https-dev.pfx:ro
   yarpapigateway:
     build:
       context: .
@@ -131,6 +170,7 @@
       - "6064:8081"
     depends_on:
       - order.api
+      - tracking.api
       - routing.grpc
       - elasticsearch
       - kibana

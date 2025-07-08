@@ -39,7 +39,7 @@ namespace SharedKernel.OpenApi.Extensions
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"API {apiVersion}");
-                options.RoutePrefix = "swagger";
+                options.RoutePrefix = string.Empty;
             });
 
             return app;

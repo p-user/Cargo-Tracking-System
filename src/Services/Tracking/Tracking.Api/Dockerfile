@@ -13,6 +13,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/Tracking/Tracking.Api/Tracking.Api.csproj", "Services/Tracking/Tracking.Api/"]
+COPY ["SharedKernel/SharedKernel.HealthChecks/SharedKernel.HealthChecks.csproj", "SharedKernel/SharedKernel.HealthChecks/"]
+COPY ["SharedKernel/SharedKernel.Logging/SharedKernel.Logging.csproj", "SharedKernel/SharedKernel.Logging/"]
+COPY ["SharedKernel/SharedKernel.Messaging/SharedKernel.Messaging.csproj", "SharedKernel/SharedKernel.Messaging/"]
+COPY ["SharedKernel/SharedKernel.Core/SharedKernel.Core.csproj", "SharedKernel/SharedKernel.Core/"]
+COPY ["SharedKernel/SharedKernel.OpenApi/SharedKernel.OpenApi.csproj", "SharedKernel/SharedKernel.OpenApi/"]
 RUN dotnet restore "./Services/Tracking/Tracking.Api/Tracking.Api.csproj"
 COPY . .
 WORKDIR "/src/Services/Tracking/Tracking.Api"

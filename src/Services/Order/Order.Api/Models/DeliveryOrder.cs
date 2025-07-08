@@ -18,8 +18,6 @@ namespace Order.Api.Models
 
         public Guid? TrackingId { get; private set; }
 
-        public string test {  get; private set; }
-
         private DeliveryOrder()
         {
 

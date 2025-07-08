@@ -29,6 +29,7 @@ app.UseSwaggerUI(options =>
 options.RoutePrefix = string.Empty;
 options.SwaggerEndpoint("/order/swagger/v1/swagger.json", "Order API v1");
 options.SwaggerEndpoint("/routing/swagger/v1/swagger.json", "Routing gRPC v1");
+options.SwaggerEndpoint("/tracking/swagger/v1/swagger.json", "Tracking API v1");
 });
 
 

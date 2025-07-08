@@ -1,5 +1,7 @@
 
 
+using SharedKernel.HealthChecks.Extensions;
+
 SelfLog.Enable(Console.Error);
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,8 +56,6 @@ builder.Services.AddDbContext<OrderDbContext>((sp, options) =>
 });
 
 
-
-
 #endregion
 
 
@@ -82,12 +82,15 @@ builder.Services.AddMassTransit<OrderDbContext>(
     }
 );
 
+builder.Services.AddCommonHealthChecks(builder.Configuration);
+
 //execeptions
 builder.Services.AddExceptionHandler<CustomExeptionHandler>();
 builder.Services.AddAspnetOpenApi("Order API", "v1");
 
 
 var app = builder.Build();
+//app.UseExceptionHandler();
 //app.UseCorrelationId();
 
 app.EnsureSeedData<OrderDbContext>();

@@ -18,5 +18,7 @@ global using SharedKernel.Core.Extensions;
 global using Microsoft.AspNetCore.Grpc.Swagger;
 global using Google.Protobuf.WellKnownTypes;
 global using SharedKernel.Messaging.Extensions;
+global using MassTransit;
+global using SharedKernel.HealthChecks.Extensions;
 
 

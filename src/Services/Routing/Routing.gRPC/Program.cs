@@ -1,8 +1,5 @@
 
 
-
-using MassTransit;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureCustomKestrelForGrpc();
@@ -30,6 +27,38 @@ if (serilogOptions.Enabled)
 //    options.IncludeInResponse = true;
 //    options.ResponseHeader = "X-Correlation-ID";
 //});
+
+#endregion
+
+
+#region Database 
+var basePath = AppContext.BaseDirectory;
+builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
+{
+    var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
+    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
+
+    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
+
+    string dbPath;
+    if (builder.Environment.IsEnvironment("Local")) //ToDo: set static file for env
+    {
+        var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var localDbFolder = Path.Combine(appDataFolder, "CargoTrackingSystem");
+        Directory.CreateDirectory(localDbFolder);
+        dbPath = Path.Combine(localDbFolder, "routingDb.sqlite");
+    }
+    else
+    {
+        var dataFolder = Path.Combine(AppContext.BaseDirectory, "data");
+        Directory.CreateDirectory(dataFolder);
+        dbPath = Path.Combine(dataFolder, "routingDb.sqlite");
+    }
+    var connectionString = $"Data Source={dbPath}";
+    options.UseSqlite(connectionString);
+
+
+});
 
 #endregion
 
@@ -62,36 +91,11 @@ builder.Services.AddMassTransit<RoutingDbContext>(
 );
 
 
-var basePath = AppContext.BaseDirectory;
-builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
-{
-    var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
-
-    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
-
-    string dbPath;
-    if (builder.Environment.IsEnvironment("Local")) //ToDo: set static file for env
-    {
-        var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        var localDbFolder = Path.Combine(appDataFolder, "CargoTrackingSystem");
-        Directory.CreateDirectory(localDbFolder);
-        dbPath = Path.Combine(localDbFolder, "routingDb.sqlite");
-    }
-    else
-    {
-        var dataFolder = Path.Combine(AppContext.BaseDirectory, "data");
-        Directory.CreateDirectory(dataFolder);
-        dbPath = Path.Combine(dataFolder, "routingDb.sqlite");
-    }
-    var connectionString = $"Data Source={dbPath}";
-    options.UseSqlite(connectionString);
-
-
-});
 builder.Services.AddHttpClient<GoogleMapsService>();
 builder.Services.AddSingleton<GoogleMapsService>();
 builder.Services.AddScoped<IRoutingApplicationService,RoutingApplicationService>();
+
+builder.Services.AddCommonHealthChecks(builder.Configuration);
 
 var app = builder.Build();
 //app.UseCorrelationId();
@@ -99,9 +103,10 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
+//app.UseExceptionHandler();
 app.UseRouting();
+app.MapHealthCheckEndpoint();
 
-    
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

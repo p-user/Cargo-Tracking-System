@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.HealthChecks\SharedKernel.HealthChecks.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />
@@ -27,8 +28,8 @@
 
   <ItemGroup>
     <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\routing.proto" Link="Protos/routing.proto" GrpcServices="Client" />
-    <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\http.proto" Link="Protos/google/api/http.proto"/>
-    <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\annotations.proto" Link="Protos/google/api/annotations.proto"/>
+    <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\http.proto" Link="Protos/google/api/http.proto" />
+    <Protobuf Include="..\..\..\SharedKernel.CommonProtos\Protos\google\api\annotations.proto" Link="Protos/google/api/annotations.proto" />
   </ItemGroup>
 
 </Project>
