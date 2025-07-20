@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Tracking.Api.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial_migration_tracking_api : Migration
+    public partial class outbox_inbox_tables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,6 +21,7 @@ namespace Tracking.Api.Data.Migrations
                     CurrentStatus = table.Column<int>(type: "integer", nullable: false),
                     CurrentLocation = table.Column<string>(type: "text", nullable: false),
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Version = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -68,27 +69,6 @@ namespace Tracking.Api.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OutboxState", x => x.OutboxId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrackingEvents",
-                columns: table => new
-                {
-                    Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CargoTrackingId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    Location = table.Column<string>(type: "text", nullable: false),
-                    Remarks = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrackingEvents", x => new { x.CargoTrackingId, x.Timestamp });
-                    table.ForeignKey(
-                        name: "FK_TrackingEvents_CargoTracking_CargoTrackingId",
-                        column: x => x.CargoTrackingId,
-                        principalTable: "CargoTracking",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,19 +150,16 @@ namespace Tracking.Api.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OutboxMessage");
+                name: "CargoTracking");
 
             migrationBuilder.DropTable(
-                name: "TrackingEvents");
+                name: "OutboxMessage");
 
             migrationBuilder.DropTable(
                 name: "InboxState");
 
             migrationBuilder.DropTable(
                 name: "OutboxState");
-
-            migrationBuilder.DropTable(
-                name: "CargoTracking");
         }
     }
 }

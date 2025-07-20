@@ -1,5 +1,7 @@
 
 
+using SharedKernel.Core.Exeptions.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureCustomKestrelForGrpc();
@@ -96,14 +98,15 @@ builder.Services.AddSingleton<GoogleMapsService>();
 builder.Services.AddScoped<IRoutingApplicationService,RoutingApplicationService>();
 
 builder.Services.AddCommonHealthChecks(builder.Configuration);
-
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 var app = builder.Build();
 //app.UseCorrelationId();
 
 
 
 // Configure the HTTP request pipeline.
-//app.UseExceptionHandler();
+app.UseExceptionHandler();
 app.UseRouting();
 app.MapHealthCheckEndpoint();
 

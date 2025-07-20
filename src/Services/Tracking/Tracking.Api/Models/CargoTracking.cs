@@ -1,41 +1,36 @@
 ﻿using Elastic.CommonSchema;
 using MassTransit.Futures.Contracts;
 using SharedKernel.Core.DDD;
-using SharedKernel.Messaging.Events;
-using System;
-using System.Collections.Generic;
 using Tracking.Api.Enums;
-using Tracking.Api.Models.ValueObjects;
+using Tracking.Api.Models.Events;
+
 
 namespace Tracking.Api.Models
 {
     public class CargoTracking : Aggregate<Guid>
     {
 
-        public string TrackingId { get; private set; }//a public more readable tracking id ; this id should be related to order.api ; should I make it 6 digit long?? Research on this
+        public string TrackingId { get; private set; }//a public more readable tracking id ; this id should be related to order.api 
         public TrackingStatus CurrentStatus { get; private set; }
         public string CurrentLocation { get; private set; }
 
         public Guid OrderId { get; private set; }
+        public int? Version { get; set; } //used by marten
 
-        private readonly List<TrackingEvent> _history = new();
-        public IReadOnlyList<TrackingEvent> History => _history.AsReadOnly();
+        private readonly List<IDomainEvent> _uncommittedEvents = new();
+        public IEnumerable<IDomainEvent> GetUncommittedEvents() => _uncommittedEvents;
 
         private CargoTracking() { }
 
 
         public static CargoTracking Create(Guid orderId,  string originLocation, DateTime timestamp)
         {
-            var cargo = new CargoTracking
-            {
-                Id = new Guid(),
-                TrackingId = GenerateReadableTrackingId(),
-                OrderId = orderId,
-            };
+            var cargo = new CargoTracking();
+            var trackingId = GenerateReadableTrackingId();
 
-            // The first event is always At Origin 
-            cargo.AddEvent(TrackingStatus.AtOriginFacility, originLocation, timestamp, "Shipment created and received at origin.");
-            cargo.AddDomainEvent(new CargoTrackingInitiated(cargo.Id, cargo.TrackingId));
+            var _event = new CargoTrackingInitiated(orderId, trackingId, originLocation, timestamp);
+            cargo.Apply(_event); 
+            cargo._uncommittedEvents.Add(_event);
 
             return cargo;
         }
@@ -54,31 +49,40 @@ namespace Tracking.Api.Models
 
 
 
-        /// <summary>
-        /// Adds a new tracking event to the cargo's history.
-        /// This is the primary method for updating the cargo's state.
-        /// </summary>
-        public void AddEvent(TrackingStatus newStatus, string newLocation, DateTime timestamp, string remarks)
+        public void UpdateStatus(TrackingStatus newStatus, string newLocation, DateTime timestamp, string remarks)
         {
-            //validate 
             if (TrackingStatusHelper.IsTerminal(this.CurrentStatus))
             {
                 throw new InvalidOperationException($"Cannot add event to cargo that is already {this.CurrentStatus}.");
             }
 
+            var _event = new CargoStatusUpdated(this.Id, this.TrackingId, newStatus.ToString(), newLocation, timestamp, remarks);
 
-            if (_history.Any() && timestamp < _history.Last().Timestamp)
-            {
-                throw new InvalidOperationException("New event timestamp cannot be earlier than the last event.");
-            }
-
-            var trackingEvent = new TrackingEvent(newStatus, newLocation, timestamp, remarks);
-            _history.Add(trackingEvent);
-            CurrentStatus = newStatus;
-            CurrentLocation = newLocation;
-
-            // Raise a domain event
-            AddDomainEvent(new CargoStatusUpdated(this.Id, this.TrackingId, this.CurrentStatus.ToString(), this.CurrentLocation));
+            Apply(_event);
+            _uncommittedEvents.Add(_event);
         }
+
+
+        #region Apply OVERLOADING
+
+        private void Apply(CargoTrackingInitiated @event)
+        {
+            Id = @event.CargoId;
+            TrackingId = @event.TrackingId;
+            CurrentStatus = TrackingStatus.AtOriginFacility;
+            CurrentLocation = @event.OriginLocation;
+        }
+
+
+        private void Apply(CargoStatusUpdated @event)
+        {
+         
+            if (Enum.TryParse<TrackingStatus>(@event.NewStatus, out var status))
+            {
+                CurrentStatus = status;
+            }
+            CurrentLocation = @event.NewLocation;
+        }
+        #endregion
     }
 }

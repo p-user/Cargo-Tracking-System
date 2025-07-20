@@ -3,7 +3,7 @@ using SharedKernel.Core.DDD;
 
 namespace SharedKernel.Messaging.Events
 {
-    public record DeliveryOrderCreatedEvent : IDomainEvent
+    public record DeliveryOrderCreatedIntegrationEvent : BaseIntegrationEvent
     {
         
         public Guid OrderId { get; set; }
@@ -11,13 +11,13 @@ namespace SharedKernel.Messaging.Events
         public string Origin { get; set; }
         public string Destination { get; set; }
 
-        public DeliveryOrderCreatedEvent(Guid orderId, string origin, string destination)
+        public DeliveryOrderCreatedIntegrationEvent(Guid orderId, string origin, string destination)
         {
             OrderId=orderId;
             Origin=origin;
             Destination=destination;
         }
 
-        public DeliveryOrderCreatedEvent() { }
+        public DeliveryOrderCreatedIntegrationEvent() { }
     }
 }

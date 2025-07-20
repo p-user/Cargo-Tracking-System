@@ -222,6 +222,9 @@ namespace Tracking.Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("Version")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("CargoTracking");
@@ -237,38 +240,6 @@ namespace Tracking.Api.Data.Migrations
                         .WithMany()
                         .HasForeignKey("InboxMessageId", "InboxConsumerId")
                         .HasPrincipalKey("MessageId", "ConsumerId");
-                });
-
-            modelBuilder.Entity("Tracking.Api.Models.CargoTracking", b =>
-                {
-                    b.OwnsMany("Tracking.Api.Models.ValueObjects.TrackingEvent", "History", b1 =>
-                        {
-                            b1.Property<Guid>("CargoTrackingId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("Timestamp")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<string>("Location")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Remarks")
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Status")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("CargoTrackingId", "Timestamp");
-
-                            b1.ToTable("TrackingEvents", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("CargoTrackingId");
-                        });
-
-                    b.Navigation("History");
                 });
 #pragma warning restore 612, 618
         }

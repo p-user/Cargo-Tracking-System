@@ -4,9 +4,9 @@ using SharedKernel.Messaging.Events;
 
 namespace Routing.gRPC.EventHandlers.Integration
 {
-    public class OrderCreatedIntegrationEventHandler(ILogger<OrderCreatedIntegrationEventHandler> _logger, IRoutingApplicationService _routingService) : IConsumer<DeliveryOrderCreatedEvent>
+    public class OrderCreatedIntegrationEventHandler(ILogger<OrderCreatedIntegrationEventHandler> _logger, IRoutingApplicationService _routingService) : IConsumer<DeliveryOrderCreatedIntegrationEvent>
     {
-        public async Task Consume(ConsumeContext<DeliveryOrderCreatedEvent> context)
+        public async Task Consume(ConsumeContext<DeliveryOrderCreatedIntegrationEvent> context)
         {
             throw new NotImplementedException();
             //var message = context.Message;

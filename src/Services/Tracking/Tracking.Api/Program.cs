@@ -1,5 +1,8 @@
+using JasperFx.Events;
+using Marten;
+using SharedKernel.Messaging.Extensions;
+using System.Reflection;
 
-using SharedKernel.HealthChecks.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var assembly = typeof(Program).Assembly;
@@ -21,19 +24,48 @@ if (serilogOptions.Enabled)
 #endregion
 
 #region Db_interceptos
-builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DispatchDomainEventInterceptor>();
 
-builder.Services.AddDbContext<TrackingDbContext>((sp, options) =>
+
+
+builder.Services.AddMarten(opts =>
 {
-    var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
+    opts.Connection(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opts.Events.StreamIdentity = StreamIdentity.AsString;
+    opts.Events.AddEventType(typeof(CargoTrackingInitiated));
+    opts.Events.AddEventType(typeof(CargoStatusUpdated));
+})
+.UseLightweightSessions()
+.ApplyAllDatabaseChangesOnStartup();
 
-    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<IDocumentSession>(sp =>
+{
+    var store = sp.GetRequiredService<IDocumentStore>();
+    var publishEndpoint = sp.GetRequiredService<IPublishEndpoint>();
 
+    var sessionOptions = new Marten.Services.SessionOptions
+    {
+        Tracking=DocumentTracking.IdentityOnly
+    };
+
+    var session = store.OpenSession(sessionOptions);
+    session.Listeners.Add(new MartenDomainEventDispatcher(publishEndpoint));
+    return session;
 });
 
+builder.Services.AddDbContext<TrackingDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+builder.Services.AddMassTransit<TrackingDbContext>(
+    builder.Configuration,
+    Assembly.GetExecutingAssembly(),
+    dbOutboxConfig =>
+    {
+        dbOutboxConfig.UsePostgres().UseBusOutbox();
+    }
+);
 
 #endregion
 
@@ -51,24 +83,16 @@ builder.Services.AddCarter();
 builder.Services.AddEndpointsApiExplorer();
 
 
-builder.Services.AddMassTransit<TrackingDbContext>(
-    builder.Configuration,
-    assembly,
-    dbOutboxConfig =>
-    {
-        dbOutboxConfig.UsePostgres().UseBusOutbox();
-    }
-);
-
 builder.Services.AddCommonHealthChecks(builder.Configuration);
 
 //exceptions
-builder.Services.AddExceptionHandler<CustomExeptionHandler>();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddAspnetOpenApi("Tracking API", "v1");
 
 var app = builder.Build();
 //ToDo: fix these
-//app.UseExceptionHandler();
+app.UseExceptionHandler();
 app.UseAspnetOpenApi("v1");
 app.UseRouting();
 
@@ -78,3 +102,4 @@ app.MapHealthCheckEndpoint();
 app.MapGet("/", () => "Hello World from Tracking Api!");
 
 await app.RunAsync();
+

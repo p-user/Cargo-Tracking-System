@@ -85,12 +85,15 @@ builder.Services.AddMassTransit<OrderDbContext>(
 builder.Services.AddCommonHealthChecks(builder.Configuration);
 
 //execeptions
-builder.Services.AddExceptionHandler<CustomExeptionHandler>();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+
 builder.Services.AddAspnetOpenApi("Order API", "v1");
 
 
 var app = builder.Build();
-//app.UseExceptionHandler();
+app.UseExceptionHandler();
 //app.UseCorrelationId();
 
 app.EnsureSeedData<OrderDbContext>();

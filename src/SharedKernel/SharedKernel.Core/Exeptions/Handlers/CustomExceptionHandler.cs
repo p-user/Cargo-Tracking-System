@@ -6,8 +6,14 @@ using Microsoft.Extensions.Logging;
 
 namespace SharedKernel.Core.Exeptions.Handlers
 {
-    public class CustomExeptionHandler(ILogger<CustomExeptionHandler> _logger) : IExceptionHandler
+    public class CustomExceptionHandler : IExceptionHandler
     {
+        private readonly ILogger<CustomExceptionHandler> _logger;
+
+        public CustomExceptionHandler(ILogger<CustomExceptionHandler> logger)
+        {
+            _logger = logger;
+        }
         public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
         {
             _logger.LogError(
