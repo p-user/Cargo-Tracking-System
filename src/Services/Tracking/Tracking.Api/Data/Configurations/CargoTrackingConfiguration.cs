@@ -1,6 +1,7 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Tracking.Api.Models;
+using Tracking.Api.Domain.CargoTracking;
 
 namespace Tracking.Api.Data.Configurations
 {

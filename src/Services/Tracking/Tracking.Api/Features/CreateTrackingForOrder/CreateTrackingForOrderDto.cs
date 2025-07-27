@@ -1,4 +1,4 @@
-﻿namespace Tracking.Api.Dtos
+﻿namespace Tracking.Api.Features.CreateTrackingForOrder
 {
     public record CreateTrackingForOrderDto
     {

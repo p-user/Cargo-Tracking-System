@@ -1,5 +1,7 @@
 using JasperFx.Events;
 using Marten;
+using Microsoft.EntityFrameworkCore;
+using SharedKernel.Core.DDD;
 using SharedKernel.Messaging.Extensions;
 using System.Reflection;
 
@@ -23,36 +25,24 @@ if (serilogOptions.Enabled)
 }
 #endregion
 
-#region Db_interceptos
 
-
+builder.Services.AddScoped(typeof(AggregateRepository<>));
 
 builder.Services.AddMarten(opts =>
 {
     opts.Connection(builder.Configuration.GetConnectionString("DefaultConnection"));
-    opts.Events.StreamIdentity = StreamIdentity.AsString;
-    opts.Events.AddEventType(typeof(CargoTrackingInitiated));
-    opts.Events.AddEventType(typeof(CargoStatusUpdated));
+    opts.Events.StreamIdentity = StreamIdentity.AsGuid;
+    opts.Events.AddEventTypes(
+        assembly.GetTypes().Where(t => t.IsClass && typeof(IDomainEvent).IsAssignableFrom(t))
+    );
+   
+
 })
 .UseLightweightSessions()
 .ApplyAllDatabaseChangesOnStartup();
 
-builder.Services.AddScoped<IDocumentSession>(sp =>
-{
-    var store = sp.GetRequiredService<IDocumentStore>();
-    var publishEndpoint = sp.GetRequiredService<IPublishEndpoint>();
 
-    var sessionOptions = new Marten.Services.SessionOptions
-    {
-        Tracking=DocumentTracking.IdentityOnly
-    };
-
-    var session = store.OpenSession(sessionOptions);
-    session.Listeners.Add(new MartenDomainEventDispatcher(publishEndpoint));
-    return session;
-});
-
-builder.Services.AddDbContext<TrackingDbContext>(options =>
+builder.Services.AddDbContext<TrackingDbContext>((sp,options) =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
@@ -67,7 +57,6 @@ builder.Services.AddMassTransit<TrackingDbContext>(
     }
 );
 
-#endregion
 
 
 builder.Services.AddAutoMapper(assembly);
@@ -91,8 +80,7 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddAspnetOpenApi("Tracking API", "v1");
 
 var app = builder.Build();
-//ToDo: fix these
-app.UseExceptionHandler();
+app.UseExceptionHandler(options => { });
 app.UseAspnetOpenApi("v1");
 app.UseRouting();
 

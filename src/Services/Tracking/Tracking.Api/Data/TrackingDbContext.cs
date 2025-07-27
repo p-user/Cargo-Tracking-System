@@ -1,7 +1,5 @@
-﻿using MassTransit;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Tracking.Api.Models;
 
 namespace Tracking.Api.Data
 {

@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.HealthChecks\SharedKernel.HealthChecks.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Logging\SharedKernel.Logging.csproj" />
-    <!--ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" /-->
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Core\SharedKernel.Core.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
     <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.OpenApi\SharedKernel.OpenApi.csproj" />

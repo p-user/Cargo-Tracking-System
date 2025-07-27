@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Tracking.Api.Enums
+namespace Tracking.Api.Domain.CargoTracking.Enums
 {
     public enum TrackingStatus
     {

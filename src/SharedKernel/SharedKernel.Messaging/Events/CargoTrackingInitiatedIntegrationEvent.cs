@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace SharedKernel.Messaging.Events
 {
-    public record CargoTrackingInitiatedIntegrationEvent(Guid CargoId, string TrackingId) : BaseIntegrationEvent;
+    public record CargoTrackingInitiatedIntegrationEvent(Guid OrderId, Guid TrackingId) : BaseIntegrationEvent;
     
 }

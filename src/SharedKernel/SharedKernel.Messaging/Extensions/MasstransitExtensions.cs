@@ -26,7 +26,7 @@ namespace SharedKernel.Messaging.Extensions
                 config.AddEntityFrameworkOutbox<TDbContext>(o =>
                 {
                     // How often the background service polls the outbox table.
-                    o.QueryDelay = TimeSpan.FromSeconds(10);
+                    o.QueryDelay = TimeSpan.FromSeconds(1000);
                   
 
                     // Idempotency (Inbox) configuration
