@@ -53,7 +53,7 @@ builder.Services.AddMassTransit<TrackingDbContext>(
     Assembly.GetExecutingAssembly(),
     dbOutboxConfig =>
     {
-        dbOutboxConfig.UsePostgres().UseBusOutbox();
+        dbOutboxConfig.UsePostgres();
     }
 );
 

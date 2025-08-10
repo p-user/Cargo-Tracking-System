@@ -1,7 +1,5 @@
-﻿using Marten;
-using Marten.Linq.Parsing.Operators;
+﻿
 using SharedKernel.CQRS;
-using SharedKernel.Messaging.Events;
 using Tracking.Api.Domain.CargoTracking;
 
 namespace Tracking.Api.Features.CreateTrackingForOrder

@@ -59,7 +59,7 @@ namespace Order.Api.Models
                 DeliveredAt = null,
             };
 
-            deliveryOrder.AddDomainEvent(new DeliveryOrderCreatedIntegrationEvent(deliveryOrder.Id, deliveryOrder.PickupAddress, deliveryOrder.DeliveryAddress));
+            deliveryOrder.AddDomainEvent(new OrderCreatedIntegrationEvent(deliveryOrder.Id, deliveryOrder.PickupAddress, deliveryOrder.DeliveryAddress));
 
             return deliveryOrder;
         }

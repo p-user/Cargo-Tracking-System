@@ -20,7 +20,6 @@ global using Microsoft.Extensions.Options;
 global using SharedKernel.Core.DDD;
 global using Carter;
 global using Serilog.Debugging;
-global using SharedKernel.Core.Data.Interceptors;
 global using SharedKernel.Logging.Extensions;
 global using SharedKernel.OpenApi.Extensions;
 global using Order.Api.Enums;

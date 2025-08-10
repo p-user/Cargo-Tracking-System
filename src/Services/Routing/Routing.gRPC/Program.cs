@@ -38,9 +38,8 @@ var basePath = AppContext.BaseDirectory;
 builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
 
-    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
+    options.AddInterceptors(auditableInterceptor);
 
     string dbPath;
     if (builder.Environment.IsEnvironment("Local")) //ToDo: set static file for env
@@ -65,30 +64,21 @@ builder.Services.AddDbContext<RoutingDbContext>((sp, options) =>
 #endregion
 
 builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DispatchDomainEventInterceptor>();
-
+builder.Services.AddUnitOfWorkWithOutbox<RoutingDbContext>();
 builder.Services.AddGrpc().AddJsonTranscoding();
 builder.Services.AddGrpcSwagger();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Routing gRPC Service",
-        Version = "v1"
-    });
 
-
-});
-
-
+builder.Services.AddAspnetOpenApi("Routing gRPC", "v1");
+builder.Services.AddUnitOfWorkWithOutbox<RoutingDbContext>();
 builder.Services.AddMassTransit<RoutingDbContext>(
     builder.Configuration,
     Assembly.GetExecutingAssembly(),
     dbOutboxConfig =>
     {
-        dbOutboxConfig.UseSqlite().UseBusOutbox();
+        dbOutboxConfig.UseSqlite();
+        dbOutboxConfig.UseBusOutbox();
     }
 );
 
@@ -110,11 +100,7 @@ app.UseExceptionHandler();
 app.UseRouting();
 app.MapHealthCheckEndpoint();
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Routing gRPC v1");
-});
+app.UseAspnetOpenApi("v1");
 
 app.MapGrpcService<RoutingService>();
 

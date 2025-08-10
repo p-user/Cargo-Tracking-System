@@ -1,5 +1,4 @@
 
-
 using SharedKernel.HealthChecks.Extensions;
 
 SelfLog.Enable(Console.Error);
@@ -41,24 +40,20 @@ if (serilogOptions.Enabled)
 
 #region Db_interceptos
 builder.Services.AddScoped<AuditableEntityInterceptor>();
-builder.Services.AddScoped<DispatchDomainEventInterceptor>();
+
 
 builder.Services.AddDbContext<OrderDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetRequiredService<AuditableEntityInterceptor>();
-    var dispatchInterceptor = sp.GetRequiredService<DispatchDomainEventInterceptor>();
-
-    options.AddInterceptors(auditableInterceptor, dispatchInterceptor);
+    options.AddInterceptors(auditableInterceptor);
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
    
 
 
 });
-
-
 #endregion
 
-
+builder.Services.AddUnitOfWorkWithOutbox<OrderDbContext>();
 builder.Services.AddAutoMapper(assembly);
 
 builder.Services.AddMediatR(config =>
@@ -78,7 +73,8 @@ builder.Services.AddMassTransit<OrderDbContext>(
     assembly,
     dbOutboxConfig =>
     {
-        dbOutboxConfig.UseSqlServer().UseBusOutbox();
+        dbOutboxConfig.UseSqlServer();
+        dbOutboxConfig.UseBusOutbox();
     }
 );
 

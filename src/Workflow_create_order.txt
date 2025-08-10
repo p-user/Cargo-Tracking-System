@@ -1,0 +1,14 @@
+[Client]
+   │ POST /orders
+   ▼
+[API Gateway (YARP)]
+   │ routes to
+   ▼
+[Order Service] --save--> [Order DB]
+   │
+   │ publish OrderCreated
+   ▼
+[Event Bus (RabbitMQ)]
+   ├──> [Routing Service] --save--> [Route DB] --publish--> RouteAssigned
+   ├──> [Notification Service] --send--> Email(after RouteAssigned)
+   └──> [Tracking Service] (after RouteAssigned)
